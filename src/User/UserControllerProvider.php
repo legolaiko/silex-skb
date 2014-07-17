@@ -37,7 +37,8 @@ class UserControllerProvider implements ControllerProviderInterface
         $registerForm->handleRequest($request);
 
         if ($registerForm->isValid()) {
-            echo 1; die;
+            $userData = $registerForm->getData();
+            $userManager->registerUser($userData['email'], $userData['password']);
         }
 
         return $this->app['twig']->render(

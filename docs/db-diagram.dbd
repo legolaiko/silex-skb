@@ -1,0 +1,316 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Devart (www.devart.com), the Database Diagram File -->
+<!-- Modifying this generated file will probably render it invalid -->
+<DevartDatabaseDiagram>
+  <SchemaVersion>1.2</SchemaVersion>
+  <DatabaseProvider>59f90733-4d68-4fdf-82a7-f0fcbf5460aa</DatabaseProvider>
+  <Connection>
+    <Name>karmator</Name>
+    <ConnectionString>User Id=root;Host=localhost;Protocol=Ssh;Character Set=utf8;SSH Host=192.168.56.101;SSH Port=22;SSH User=vagrant;SSH Private Key=C:\Vagrant\projects\vagrant\puphpet\files\dot\ssh\id_rsa.ppk;SSH Authentication Type=PublicKey</ConnectionString>
+  </Connection>
+  <Settings>
+    <DbDiagramOptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <CustomProperties />
+    </DbDiagramOptions>
+    <Options xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PageOptions">
+      <TopLeftMargins>
+        <Width>39.3700787401575 in/100</Width>
+        <Height>39.3700787401575 in/100</Height>
+      </TopLeftMargins>
+      <BottomRightMargins>
+        <Width>39.3700787401575 in/100</Width>
+        <Height>39.3700787401575 in/100</Height>
+      </BottomRightMargins>
+      <PaperSize>
+        <Width>827 in/100</Width>
+        <Height>1169 in/100</Height>
+      </PaperSize>
+    </Options>
+    <Options xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="PrintOptions" />
+    <Options xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="ViewOptions">
+      <ShadowOffset>
+        <X>4 px</X>
+        <Y>4 px</Y>
+      </ShadowOffset>
+      <CustomProperties />
+    </Options>
+  </Settings>
+  <VirtualRelations>
+    <RelationCount>0</RelationCount>
+  </VirtualRelations>
+  <Diagram Version="1.10.0.93">
+    <DiagramModel>
+      <Model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="RootModel">
+        <CustomProperties>
+          <OID>0</OID>
+        </CustomProperties>
+        <Children>
+          <Model xsi:type="DDContainerModel">
+            <CustomProperties>
+              <OID>1</OID>
+              <BackgroundColor>252, 250, 240</BackgroundColor>
+              <Parent>0</Parent>
+            </CustomProperties>
+            <Children>
+              <Model xsi:type="TableModel">
+                <CustomProperties>
+                  <OID>2</OID>
+                  <Parent>1</Parent>
+                </CustomProperties>
+                <Location>
+                  <X>50 px</X>
+                  <Y>40 px</Y>
+                </Location>
+                <Size>
+                  <Width>170 px</Width>
+                  <Height>165 px</Height>
+                </Size>
+                <DbOid>
+                  <Path>`silex-skb`.user</Path>
+                  <TypeName>Table</TypeName>
+                </DbOid>
+                <Compartments>
+                  <ConstraintsCollapsed>False</ConstraintsCollapsed>
+                  <IndexesCollapsed>False</IndexesCollapsed>
+                  <TriggersCollapsed>True</TriggersCollapsed>
+                </Compartments>
+              </Model>
+              <Model xsi:type="TableModel">
+                <CustomProperties>
+                  <OID>3</OID>
+                  <Parent>1</Parent>
+                </CustomProperties>
+                <Location>
+                  <X>410 px</X>
+                  <Y>20 px</Y>
+                </Location>
+                <Size>
+                  <Width>178 px</Width>
+                  <Height>196 px</Height>
+                </Size>
+                <DbOid>
+                  <Path>`silex-skb`.user_to_user_role</Path>
+                  <TypeName>Table</TypeName>
+                </DbOid>
+                <Compartments>
+                  <ConstraintsCollapsed>False</ConstraintsCollapsed>
+                  <IndexesCollapsed>False</IndexesCollapsed>
+                  <TriggersCollapsed>True</TriggersCollapsed>
+                </Compartments>
+              </Model>
+              <Model xsi:type="RelationLinkModel">
+                <CustomProperties>
+                  <OID>4</OID>
+                  <Comment>5</Comment>
+                  <OutModel>3</OutModel>
+                  <InModel>2</InModel>
+                  <OutPort>6</OutPort>
+                  <InPort>7</InPort>
+                  <Parent>1</Parent>
+                </CustomProperties>
+                <PortAnchors>
+                  <Port>
+                    <Location>
+                      <X>-3 px</X>
+                      <Y>52.1612903225806 px</Y>
+                    </Location>
+                    <Anchors>None</Anchors>
+                    <Align>Left</Align>
+                    <CustomProperties>
+                      <OID>6</OID>
+                      <PortType>FixedAnchor</PortType>
+                    </CustomProperties>
+                  </Port>
+                  <Port>
+                    <Location>
+                      <X>162 px</X>
+                      <Y>38.4246575342466 px</Y>
+                    </Location>
+                    <Anchors>None</Anchors>
+                    <Align>Right</Align>
+                    <CustomProperties>
+                      <OID>7</OID>
+                      <PortType>FixedAnchor</PortType>
+                    </CustomProperties>
+                  </Port>
+                </PortAnchors>
+                <BendPoints>
+                  <PointD>
+                    <X>360 px</X>
+                    <Y>72.1612903225806 px</Y>
+                  </PointD>
+                  <PointD>
+                    <X>360 px</X>
+                    <Y>78.4246575342466 px</Y>
+                  </PointD>
+                </BendPoints>
+                <IsManuallyRouted>false</IsManuallyRouted>
+                <DbOid>
+                  <Path>`silex-skb`.user_to_user_role.FK_user_to_user_role_user_id</Path>
+                  <TypeName>ForeignKey</TypeName>
+                </DbOid>
+              </Model>
+              <Model xsi:type="RelationCommentModel">
+                <CustomProperties>
+                  <OID>5</OID>
+                  <HolderModel>4</HolderModel>
+                  <Port>8</Port>
+                  <Parent>1</Parent>
+                </CustomProperties>
+                <PortAnchors>
+                  <Port xsi:type="LinkPort">
+                    <Location>
+                      <X>120 px</X>
+                      <Y>-6.26336940642329 px</Y>
+                    </Location>
+                    <Anchors>None</Anchors>
+                    <Align>Left</Align>
+                    <CustomProperties>
+                      <OID>8</OID>
+                      <PortType>FixedAnchor</PortType>
+                    </CustomProperties>
+                    <LinkPortAnchor>OutPoint</LinkPortAnchor>
+                  </Port>
+                </PortAnchors>
+                <CommentOffset>
+                  <X>22 px</X>
+                  <Y>2 px</Y>
+                </CommentOffset>
+              </Model>
+              <Model xsi:type="TableModel">
+                <CustomProperties>
+                  <OID>9</OID>
+                  <Parent>1</Parent>
+                </CustomProperties>
+                <Location>
+                  <X>820 px</X>
+                  <Y>10 px</Y>
+                </Location>
+                <Size>
+                  <Width>144 px</Width>
+                  <Height>126 px</Height>
+                </Size>
+                <DbOid>
+                  <Path>`silex-skb`.user_role</Path>
+                  <TypeName>Table</TypeName>
+                </DbOid>
+                <Compartments>
+                  <ConstraintsCollapsed>False</ConstraintsCollapsed>
+                  <IndexesCollapsed>True</IndexesCollapsed>
+                  <TriggersCollapsed>True</TriggersCollapsed>
+                </Compartments>
+              </Model>
+              <Model xsi:type="RelationLinkModel">
+                <CustomProperties>
+                  <OID>10</OID>
+                  <Comment>11</Comment>
+                  <OutModel>3</OutModel>
+                  <InModel>9</InModel>
+                  <OutPort>12</OutPort>
+                  <InPort>13</InPort>
+                  <Parent>1</Parent>
+                </CustomProperties>
+                <PortAnchors>
+                  <Port>
+                    <Location>
+                      <X>180 px</X>
+                      <Y>50 px</Y>
+                    </Location>
+                    <Anchors>None</Anchors>
+                    <Align>Right</Align>
+                    <CustomProperties>
+                      <OID>12</OID>
+                      <PortType>FixedAnchor</PortType>
+                    </CustomProperties>
+                  </Port>
+                  <Port>
+                    <Location>
+                      <X>0 px</X>
+                      <Y>61.2336448598131 px</Y>
+                    </Location>
+                    <Anchors>Top Bottom</Anchors>
+                    <Align>Left</Align>
+                    <CustomProperties>
+                      <OID>13</OID>
+                      <PortType>FloatAnchor</PortType>
+                    </CustomProperties>
+                  </Port>
+                </PortAnchors>
+                <BendPoints>
+                  <PointD>
+                    <X>617 px</X>
+                    <Y>70 px</Y>
+                  </PointD>
+                  <PointD>
+                    <X>617 px</X>
+                    <Y>71.2336448598131 px</Y>
+                  </PointD>
+                </BendPoints>
+                <IsManuallyRouted>false</IsManuallyRouted>
+                <DbOid>
+                  <Path>`silex-skb`.user_to_user_role.FK_user_to_user_role_user_role_id</Path>
+                  <TypeName>ForeignKey</TypeName>
+                </DbOid>
+              </Model>
+              <Model xsi:type="RelationCommentModel">
+                <CustomProperties>
+                  <OID>11</OID>
+                  <HolderModel>10</HolderModel>
+                  <Port>14</Port>
+                  <Parent>1</Parent>
+                </CustomProperties>
+                <PortAnchors>
+                  <Port xsi:type="LinkPort">
+                    <Location>
+                      <X>-130.5 px</X>
+                      <Y>-1.233642578125 px</Y>
+                    </Location>
+                    <Anchors>None</Anchors>
+                    <Align>Right</Align>
+                    <CustomProperties>
+                      <OID>14</OID>
+                      <PortType>FixedAnchor</PortType>
+                    </CustomProperties>
+                    <LinkPortAnchor>OutPoint</LinkPortAnchor>
+                  </Port>
+                </PortAnchors>
+                <CommentOffset>
+                  <X>22 px</X>
+                  <Y>2 px</Y>
+                </CommentOffset>
+              </Model>
+            </Children>
+            <Location>
+              <X>-140 px</X>
+              <Y>200 px</Y>
+            </Location>
+            <Size>
+              <Width>1020 px</Width>
+              <Height>310 px</Height>
+            </Size>
+            <IsCollapsed>false</IsCollapsed>
+            <Text>User</Text>
+            <ScrollState>
+              <ScrollOrigin>
+                <X>0 px</X>
+                <Y>0 px</Y>
+              </ScrollOrigin>
+              <ScrollPosition>
+                <X>0 px</X>
+                <Y>0 px</Y>
+              </ScrollPosition>
+            </ScrollState>
+          </Model>
+        </Children>
+        <ViewPort>
+          <ScaleMode>Free</ScaleMode>
+          <Scale>1</Scale>
+          <Location>
+            <X>-169 px</X>
+            <Y>160 px</Y>
+          </Location>
+        </ViewPort>
+      </Model>
+    </DiagramModel>
+  </Diagram>
+</DevartDatabaseDiagram>

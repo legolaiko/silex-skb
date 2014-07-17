@@ -31,6 +31,18 @@ $app->register(new \Silex\Provider\DoctrineServiceProvider(), [
     ]
 ]);
 $app->register(new \Silex\Provider\ValidatorServiceProvider());
+$app->register(new \Silex\Provider\SessionServiceProvider());
+$app->register(new \Silex\Provider\SecurityServiceProvider(), [
+    'security.firewalls' => [
+        'admin' => array(
+            'pattern' => '^/admin/',
+            'form' => array('login_path' => '/login', 'check_path' => '/admin/login_check'),
+            'users' => array(
+                'admin' => array('ROLE_ADMIN', '5FZ2Z8QIkA7UTZ4BYkoC+GsReLf569mSKDsfods6LYQ8t+a8EW9oaircfMpmaLbPBh4FOBiiFyLfuZmTSUwzZg=='),
+            ),
+        )
+    ]
+]);
 
 $app->register(new \User\UserServiceProvider());
 
@@ -46,7 +58,9 @@ $app['translator.domains'] = array(
             'Sign up' => 'Зарегистрироваться',
             'Email' => 'Почта',
             'Password' => 'Пароль',
-            'Repeat password' => 'Повторите пароль'
+            'Repeat password' => 'Повторите пароль',
+            'Remember me' => 'Запомнить меня',
+            'Sign in' => 'Войти'
         )
     ),
     'validators' => array(

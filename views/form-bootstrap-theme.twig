@@ -8,6 +8,32 @@
     {% endspaceless %}
 {% endblock form_row %}
 
+{% block checkbox_row %}
+    {% spaceless %}
+        <div class="form-group{% if errors is not empty %} has-error{% endif %}">
+            <div class="checkbox">
+                <label>
+                    {{ form_widget(form) }} {{ form_label(form) }}
+                </label>
+                {{ form_errors(form) }}
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock checkbox_row %}
+
+
+{% block checkbox_label %}
+    {% spaceless %}
+        {% if label is not sameas(false) %}
+            {% if label is empty %}
+                {% set label = name|humanize %}
+            {% endif %}
+            {{ label|trans({}, translation_domain) }}
+            {# unfortunatally we loose label attrs with 'label > input' semantic #}
+        {% endif %}
+    {% endspaceless %}
+{% endblock checkbox_label %}
+
 {% block form_widget_simple %}
     {% spaceless %}
         {% set type = type|default('text') %}

@@ -23,7 +23,7 @@ class UserServiceProvider implements ServiceProviderInterface
             if (!isset($pimple['form.factory'])) {
                 throw new \RuntimeException('Can\'t resolve form factory from the container');
             }
-            if (!isset($pimple['translator'])) {
+            if (!isset($pimple['security'])) {
                 throw new \RuntimeException('Can\'t translator from the container');
             }
             return new UserManager($pimple['form.factory'], $pimple['translator']);
