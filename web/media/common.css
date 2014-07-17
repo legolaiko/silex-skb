@@ -1,0 +1,17 @@
+.login-form {
+   min-width: 320px;
+}
+.login-form-outer {
+    padding: 20px;
+}
+
+.content-outer {
+    margin-top: 50px;
+}
+
+ul.form-errors {
+    list-style-type: none;
+    font-size: smaller;
+    color: red;
+    padding: 0;
+}

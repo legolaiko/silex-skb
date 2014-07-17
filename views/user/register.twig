@@ -1,0 +1,14 @@
+{% form_theme formRegister 'form-bootstrap-theme.twig' %}
+{% extends 'layout.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-5">
+            <h2>{% trans %}Register new user{% endtrans %}</h2>
+            {{ form(formRegister) }}
+        </div>
+        <div class="col-md-7">
+
+        </div>
+    </div>
+{% endblock %}
