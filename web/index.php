@@ -23,7 +23,7 @@ $app->register(new \Silex\Provider\DoctrineServiceProvider(), [
         'mysql_read' => [
             'driver'    => 'pdo_mysql',
             'host'      => 'localhost',
-            'dbname'    => 'karma-motor',
+            'dbname'    => 'silex-skb',
             'user'      => 'root',
             'password'  => '123',
             'charset'   => 'utf8'

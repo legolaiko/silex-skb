@@ -20,13 +20,18 @@ class UserServiceProvider implements ServiceProviderInterface
     public function register(Container $pimple)
     {
         $pimple['user.manager'] = function() use ($pimple) {
+
+            // TODO implement 'assertRegistered' method for dependent services
             if (!isset($pimple['form.factory'])) {
                 throw new \RuntimeException('Can\'t resolve form factory from the container');
             }
-            if (!isset($pimple['security'])) {
-                throw new \RuntimeException('Can\'t translator from the container');
+            if (!isset($pimple['security.encoder_factory'])) {
+                throw new \RuntimeException('Can\'t security.encoder_factory from the container');
             }
-            return new UserManager($pimple['form.factory'], $pimple['translator']);
+            if (!isset($pimple['db'])) {
+                throw new \RuntimeException('Can\'t db from the container');
+            }
+            return new UserManager($pimple['form.factory'], $pimple['security.encoder_factory'], $pimple['db']);
         };
     }
 
