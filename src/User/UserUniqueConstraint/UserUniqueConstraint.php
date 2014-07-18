@@ -10,7 +10,7 @@ use User\UserManager;
 class UserUniqueConstraint extends Constraint
 {
     protected $userManager;
-    protected $message = 'User name already registered';
+    protected $message = 'User name already registered.';
 
     public function __construct(UserManager $userManager)
     {

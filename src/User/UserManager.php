@@ -9,6 +9,7 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use User\UserUniqueConstraint\UserUniqueConstraint;
 
 class UserManager
 {
@@ -50,7 +51,11 @@ class UserManager
         $form = $this->formFactory
             ->createBuilder('form', $user)
             ->add('username', 'email', [
-                'constraints' => [new Email(), new Length(['min' => 4, 'max' => 128])],
+                'constraints' => [
+                    new Email(),
+                    new Length(['min' => 4, 'max' => 128]),
+                    new UserUniqueConstraint($this)
+                ],
                 'label' => 'Email'
             ])
             ->add('password', 'repeated', [
@@ -90,14 +95,14 @@ class UserManager
     public function findByUsername($username)
     {
         $stmt = $this->dbConn->executeQuery(
-            'SELECT * FROM users WHERE username = ?', array(strtolower($username))
+            'SELECT * FROM user WHERE username = ?', array(strtolower($username))
         );
 
         $user = $stmt->fetch();
 
         if ($user) {
-            $user = new User();
-            $user->setUsername($user['username'])
+            $user = (new User())
+                 ->setUsername($user['username'])
                  ->setPassword($user['password']);
         }
 

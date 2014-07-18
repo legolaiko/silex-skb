@@ -66,6 +66,7 @@ $app['translator.domains'] = array(
     'validators' => array(
         'ru' => array(
             'The password fields must match.' => 'Значения полей должны совпадать.',
+            'User name already registered.' => 'Это имя уже зарегестрировано'
         )
     ),
 );
