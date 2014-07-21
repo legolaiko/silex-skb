@@ -6,6 +6,7 @@ namespace User;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use User\UserMapper\UserMapper;
 
 class UserServiceProvider implements ServiceProviderInterface
 {
@@ -15,23 +16,36 @@ class UserServiceProvider implements ServiceProviderInterface
      * This method should only be used to configure services and parameters.
      * It should not get services.
      *
-     * @param Container $pimple An Container instance
+     * @param Container $app An Container instance
      */
-    public function register(Container $pimple)
+    public function register(Container $app)
     {
-        $pimple['user.manager'] = function() use ($pimple) {
+        $app['user.mapper'] = function() use ($app) {
+            return new UserMapper($app['db']);
+        };
 
+        $app['user.manager'] = function() use ($app) {
             // TODO implement 'assertRegistered' method for dependent services
-            if (!isset($pimple['form.factory'])) {
-                throw new \RuntimeException('Can\'t resolve form factory from the container');
-            }
-            if (!isset($pimple['security.encoder_factory'])) {
-                throw new \RuntimeException('Can\'t security.encoder_factory from the container');
-            }
-            if (!isset($pimple['db'])) {
-                throw new \RuntimeException('Can\'t db from the container');
-            }
-            return new UserManager($pimple['form.factory'], $pimple['security.encoder_factory'], $pimple['db']);
+            return new UserManager(
+                $app['form.factory'],
+                $app['security.encoder_factory'],
+                $app['security.authentication_manager'],
+                $app['user.mapper']
+            );
+        };
+
+        $app['user.provider'] = function() use ($app) {
+            return new UserProvider($app['user.mapper']);
+        };
+
+        $app['security.firewalls'] = function() use ($app) {
+            return [
+                'user' => array(
+                    'pattern'   => '^/',
+                    'anonymous' => true,
+                    'users'     => $app['user.provider']
+                )
+            ];
         };
     }
 

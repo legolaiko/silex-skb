@@ -16,7 +16,7 @@ class UserUniqueConstraintValidator extends ConstraintValidator
     {
         /* @var $constraint \User\UserUniqueConstraint\UserUniqueConstraint */
 
-        $user = $constraint->getUserManager()->findByUsername($value);
+        $user = $constraint->getUserMapper()->findByUsername($value);
         if ($user) {
             $this->context->addViolation($constraint->getMessage());
         }

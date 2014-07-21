@@ -25,6 +25,9 @@ class UserControllerProvider implements ControllerProviderInterface
         /* @var $controllers ControllerCollection */
         $controllers = $app['controllers_factory'];
         $controllers->match('register', [$this, 'register']);
+
+        $this->app->before([$this, 'userWidget']);
+
         return $controllers;
     }
 
@@ -32,17 +35,30 @@ class UserControllerProvider implements ControllerProviderInterface
     {
         /* @var $userManager \User\UserManager */
         $userManager  = $this->app['user.manager'];
-        $registerForm = $userManager->createRegisterForm();
+        $formRegister = $userManager->createRegisterForm();
 
-        $registerForm->handleRequest($request);
+        $formRegister->handleRequest($request);
 
-        if ($registerForm->isValid()) {
-            $userManager->registerUser($registerForm->getData());
-
+        if ($formRegister->isValid()) {
+            $userManager->registerUser($formRegister->getData());
         }
 
         return $this->app['twig']->render(
-            'user/register.twig', ['formRegister' => $registerForm->createView()]
+            'user/register.twig', ['formRegister' => $formRegister->createView()]
         );
+    }
+
+    public function userWidget(Request $request)
+    {
+        /* @var $userManager \User\UserManager */
+        $userManager = $this->app['user.manager'];
+        $formLogin   = $userManager->createLoginForm();
+
+        if (array_key_exists('signIn', $request->get('form', []))) {
+            // login form submitted
+            $formLogin->handleRequest($request);
+        }
+
+        $this->app['twig']->addGlobal('formLogin', $formLogin->createView());
     }
 } 

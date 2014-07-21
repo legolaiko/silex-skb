@@ -1,5 +1,4 @@
 <?php
-
 require_once __DIR__.'/../vendor/autoload.php';
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
@@ -32,19 +31,11 @@ $app->register(new \Silex\Provider\DoctrineServiceProvider(), [
 ]);
 $app->register(new \Silex\Provider\ValidatorServiceProvider());
 $app->register(new \Silex\Provider\SessionServiceProvider());
-$app->register(new \Silex\Provider\SecurityServiceProvider(), [
-    'security.firewalls' => [
-        'admin' => array(
-            'pattern' => '^/admin/',
-            'form' => array('login_path' => '/login', 'check_path' => '/admin/login_check'),
-            'users' => array(
-                'admin' => array('ROLE_ADMIN', '5FZ2Z8QIkA7UTZ4BYkoC+GsReLf569mSKDsfods6LYQ8t+a8EW9oaircfMpmaLbPBh4FOBiiFyLfuZmTSUwzZg=='),
-            ),
-        )
-    ]
-]);
 
 $app->register(new \User\UserServiceProvider());
+$app->register(new \Silex\Provider\SecurityServiceProvider());
+
+
 
 
 $app->mount('user', new \User\UserControllerProvider());
@@ -72,15 +63,7 @@ $app['translator.domains'] = array(
 );
 $app['translator']->setLocale('ru');
 
-$app->before(function() use ($app) {
-    $app['twig']
-        ->addGlobal(
-            'formLogin',
-            $app['user.manager']
-                ->createLoginForm()
-                ->createView()
-        );
-});
+
 
 $app->match('/', function () use ($app) {
     return $app['twig']->render('layout.twig');

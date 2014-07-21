@@ -3,30 +3,36 @@
 
 namespace User;
 
-use Doctrine\DBAL\Connection;
+
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use User\UserMapper\UserMapper;
 use User\UserUniqueConstraint\UserUniqueConstraint;
 
 class UserManager
 {
     protected $formFactory;
     protected $encoderFactory;
-    protected $dbConn;
+    protected $authManager;
+    protected $userMapper;
     protected $salt;
 
     function __construct(
         FormFactoryInterface $formFactory,
         EncoderFactoryInterface $encoderFactory,
-        Connection $dbConn,
+        AuthenticationManagerInterface $authManager,
+        UserMapper $userMapper,
         $salt = 'ladkfn34')
     {
         $this->formFactory    = $formFactory;
         $this->encoderFactory = $encoderFactory;
-        $this->dbConn         = $dbConn;
+        $this->authManager    = $authManager;
+        $this->userMapper     = $userMapper;
         $this->salt           = $salt;
     }
 
@@ -34,7 +40,7 @@ class UserManager
     {
         $form = $this->formFactory
             ->createBuilder('form')
-            ->add('email', 'text')
+            ->add('username', 'text')
             ->add('password', 'password')
             ->add('rememberMe', 'checkbox', ['required' => false])
             ->add('signIn', 'submit')
@@ -54,7 +60,8 @@ class UserManager
                 'constraints' => [
                     new Email(),
                     new Length(['min' => 4, 'max' => 128]),
-                    new UserUniqueConstraint($this)
+                    new UserUniqueConstraint($this->userMapper),
+                    new NotBlank()
                 ],
                 'label' => 'Email'
             ])
@@ -63,7 +70,10 @@ class UserManager
                 'invalid_message' => 'The password fields must match.',
                 'first_options'   => ['label' => 'Password'],
                 'second_options'  => ['label' => 'Repeat password'],
-                'constraints' => new Length(['min' => 4, 'max' => 64])
+                'constraints'     => [
+                    new Length(['min' => 4, 'max' => 64]),
+                    new NotBlank()
+                ]
             ])
             ->add('signUp', 'submit')
             ->getForm();
@@ -79,33 +89,11 @@ class UserManager
             $user->setPassword($pwdEncoded);
         }
 
-        $this->dbConn->insert(
-            'user', [
-                'username' => $user->getUsername(),
-                'password' => $user->getPassword()
-            ]
-        );
+        $this->userMapper->insertUser($user);
     }
 
-    /**
-     * @param $username
-     * @return bool|User false on failure
-     * @throws \Doctrine\DBAL\DBALException
-     */
-    public function findByUsername($username)
+    public function authenticate($username, $password, $providerKey = 'user')
     {
-        $stmt = $this->dbConn->executeQuery(
-            'SELECT * FROM user WHERE username = ?', array(strtolower($username))
-        );
-
-        $user = $stmt->fetch();
-
-        if ($user) {
-            $user = (new User())
-                 ->setUsername($user['username'])
-                 ->setPassword($user['password']);
-        }
-
-        return $user;
+        $this->authManager->authenticate(new UsernamePasswordToken($username, $password, $providerKey));
     }
 } 

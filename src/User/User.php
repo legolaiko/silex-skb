@@ -119,4 +119,12 @@ class User implements AdvancedUserInterface
         $this->salt = $salt;
         return $this;
     }
+
+    /**
+     * @param array $roles
+     */
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
+    }
 } 

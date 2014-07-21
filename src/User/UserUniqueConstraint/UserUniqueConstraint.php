@@ -5,16 +5,16 @@ namespace User\UserUniqueConstraint;
 
 
 use Symfony\Component\Validator\Constraint;
-use User\UserManager;
+use User\UserMapper\UserMapper;
 
 class UserUniqueConstraint extends Constraint
 {
-    protected $userManager;
+    protected $userMapper;
     protected $message = 'User name already registered.';
 
-    public function __construct(UserManager $userManager)
+    public function __construct(UserMapper $userMapper)
     {
-        $this->userManager = $userManager;
+        $this->userMapper = $userMapper;
     }
 
     /**
@@ -26,10 +26,10 @@ class UserUniqueConstraint extends Constraint
     }
 
     /**
-     * @return UserManager
+     * @return UserMapper
      */
-    public function getUserManager()
+    public function getUserMapper()
     {
-        return $this->userManager;
+        return $this->userMapper;
     }
 } 
