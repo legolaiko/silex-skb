@@ -41,8 +41,8 @@ class UserServiceProvider implements ServiceProviderInterface
         $app['security.firewalls'] = function() use ($app) {
             return [
                 'user' => array(
-                    'pattern'   => '^/',
                     'anonymous' => true,
+                    'http'      => true,
                     'users'     => $app['user.provider']
                 )
             ];

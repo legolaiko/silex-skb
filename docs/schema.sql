@@ -33,3 +33,5 @@ ENGINE = INNODB
 CHARACTER SET utf8
 COLLATE utf8_unicode_ci
 COMMENT = 'Adjacency table for ''user'' and ''user_role''';
+
+INSERT INTO  user_role (name) VALUES ('ROLE_USER');

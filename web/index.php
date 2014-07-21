@@ -22,7 +22,7 @@ $app->register(new \Silex\Provider\DoctrineServiceProvider(), [
         'mysql_read' => [
             'driver'    => 'pdo_mysql',
             'host'      => 'localhost',
-            'dbname'    => 'silex-skb',
+            'dbname'    => 'silex-blog',
             'user'      => 'root',
             'password'  => '123',
             'charset'   => 'utf8'
@@ -34,6 +34,7 @@ $app->register(new \Silex\Provider\SessionServiceProvider());
 
 $app->register(new \User\UserServiceProvider());
 $app->register(new \Silex\Provider\SecurityServiceProvider());
+$app->register(new \Silex\Provider\RememberMeServiceProvider());
 
 
 

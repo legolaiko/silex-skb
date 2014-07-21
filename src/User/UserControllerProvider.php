@@ -57,6 +57,8 @@ class UserControllerProvider implements ControllerProviderInterface
         if (array_key_exists('signIn', $request->get('form', []))) {
             // login form submitted
             $formLogin->handleRequest($request);
+            $formData = $formLogin->getData();
+            $userManager->authenticate($formData['username'], $formData['password']);
         }
 
         $this->app['twig']->addGlobal('formLogin', $formLogin->createView());

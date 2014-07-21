@@ -40,7 +40,15 @@ class UserManager
     {
         $form = $this->formFactory
             ->createBuilder('form')
-            ->add('username', 'text')
+            ->add('username', 'email', [
+                'constraints' => [
+                    new Email(),
+                    new Length(['min' => 4, 'max' => 128]),
+                    new UserUniqueConstraint($this->userMapper),
+                    new NotBlank()
+                ],
+                'label' => 'Email'
+            ])
             ->add('password', 'password')
             ->add('rememberMe', 'checkbox', ['required' => false])
             ->add('signIn', 'submit')
@@ -53,6 +61,7 @@ class UserManager
     {
         $user = new User();
         $user->setSalt($this->salt);
+        $user->setRoles(['ROLE_USER']);
 
         $form = $this->formFactory
             ->createBuilder('form', $user)
