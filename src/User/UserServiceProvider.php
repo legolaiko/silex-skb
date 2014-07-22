@@ -57,7 +57,8 @@ class UserServiceProvider implements ServiceProviderInterface
                         'username_parameter' => 'form[username]',
                         'password_parameter' => 'form[password]',
                         'csrf_parameter'     => 'form[_token]',
-                        'with_csrf'          => true
+                        'with_csrf'          => true,
+                        'intention'          => 'form'
                     ],
                     'users'     => $app['user.provider']
                 )
