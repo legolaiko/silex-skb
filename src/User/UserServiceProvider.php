@@ -51,7 +51,14 @@ class UserServiceProvider implements ServiceProviderInterface
             return [
                 'user' => array(
                     'anonymous' => true,
-                    'form'      => true,
+                    'form'      => [
+                        'login_path'         => '/user/login',
+                        'check_path'         => '/user/login_check',
+                        'username_parameter' => 'form[username]',
+                        'password_parameter' => 'form[password]',
+                        'csrf_parameter'     => 'form[_token]',
+                        'with_csrf'          => true
+                    ],
                     'users'     => $app['user.provider']
                 )
             ];

@@ -3,10 +3,9 @@
 
 namespace User;
 
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
-use User\UserFactory\UserWritableInterface;
+use User\UserMapper\UserDbalInterface;
 
-class User implements AdvancedUserInterface, UserWritableInterface
+class User implements UserDbalInterface
 {
 
     protected $id;

@@ -2,9 +2,12 @@
 {% extends 'layout.twig' %}
 
 {% block content %}
-    <div class="row">
+    <div class="row user-forms">
         <div class="col-md-5">
-            <h2>{% trans %}Register new user{% endtrans %}</h2>
+            <ul class="nav nav-tabs">
+                <li><a href="{{ url('/user/login') }}">{{ 'Sign in'|trans }}</a></li>
+                <li class="active"><a href="{{ url('/user/register') }}">{{ 'Sign up'|trans }}</a></li>
+            </ul>
             {{ form(formRegister) }}
         </div>
         <div class="col-md-7">

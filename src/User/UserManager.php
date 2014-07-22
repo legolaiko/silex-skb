@@ -33,22 +33,21 @@ class UserManager
         $this->userMapper     = $userMapper;
     }
 
-    public function createLoginForm()
+    /**
+     * @return \Symfony\Component\Form\Form
+     */
+    public function createLoginForm($username = null)
     {
         $form = $this->formFactory
             ->createBuilder('form')
             ->add('username', 'email', [
-                'constraints' => [
-                    new Email(),
-                    new Length(['min' => 4, 'max' => 128]),
-                    new UserUniqueConstraint($this->userMapper),
-                    new NotBlank()
-                ],
-                'label' => 'Email'
+                'label' => 'Email',
+                'data' => $username
             ])
             ->add('password', 'password')
             ->add('rememberMe', 'checkbox', ['required' => false])
             ->add('signIn', 'submit')
+            ->setAction('/user/login_check')
             ->getForm();
 
         return $form;

@@ -58,7 +58,7 @@ class UserMapperDbal implements UserMapperInterface
             $user->setId($userData['id']);
             $user->setUsername($userData['username']);
             $user->setPassword($userData['password']);
-            $this->loadUserRoles($userData);
+            $this->loadUserRoles($user);
         }
 
         return $user;
@@ -75,7 +75,7 @@ class UserMapperDbal implements UserMapperInterface
     }
 
 
-    protected function assertUser(UserInterface $user)
+    protected function assertUser($user)
     {
         if (!($user instanceof UserDbalInterface)) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
@@ -109,7 +109,7 @@ class UserMapperDbal implements UserMapperInterface
 
         $roles = [];
         while (false !== ($role = $stmt->fetch())) {
-            $roles[] = $role;
+            $roles[] = $role['name'];
         }
 
         $user->setRoles($roles);

@@ -1,2 +1,17 @@
 {% form_theme formLogin 'form-bootstrap-theme.twig' %}
-{{ form(formLogin) }}
+{% extends 'layout.twig' %}
+
+{% block content %}
+    <div class="row user-forms">
+        <div class="col-md-5">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="{{ url('/user/login') }}">{{ 'Sign in'|trans }}</a></li>
+                <li><a href="{{ url('/user/register') }}">{{ 'Sign up'|trans }}</a></li>
+            </ul>
+            {{ form(formLogin) }}
+        </div>
+        <div class="col-md-7">
+
+        </div>
+    </div>
+{% endblock %}

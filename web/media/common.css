@@ -1,12 +1,9 @@
-.login-form-outer {
-   min-width: 320px;
-}
-.login-form-outer {
-    padding: 20px;
+.content-outer {
+    margin-top: 75px;
 }
 
-.content-outer {
-    margin-top: 50px;
+.user-forms form {
+    padding-top: 25px;
 }
 
 ul.form-errors {

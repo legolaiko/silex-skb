@@ -3,7 +3,9 @@
 namespace User\UserFactory;
 
 
-interface UserWritableInterface
+use Symfony\Component\Security\Core\User\UserInterface;
+
+interface UserWritableInterface extends UserInterface
 {
     public function setUsername($username);
 

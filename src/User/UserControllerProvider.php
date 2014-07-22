@@ -6,6 +6,7 @@ namespace User;
 use Silex\ControllerCollection;
 use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserControllerProvider implements ControllerProviderInterface
@@ -22,13 +23,38 @@ class UserControllerProvider implements ControllerProviderInterface
     public function connect(Application $app)
     {
         $this->app = $app;
+
         /* @var $controllers ControllerCollection */
         $controllers = $app['controllers_factory'];
-        $controllers->match('register', [$this, 'register']);
 
-        $this->app->before([$this, 'userWidget']);
+        $controllers->match('register', [$this, 'register'])
+            ->bind('/user/register');
+
+        $controllers->match('login', [$this, 'login'])
+            ->bind('/user/login');
 
         return $controllers;
+    }
+
+    public function login(Request $request)
+    {
+        /* @var $userManager \User\UserManager */
+        $userManager  = $this->app['user.manager'];
+
+        $lastUsername = $this->app['session']->get('_security.last_username');
+        $formLogin    = $userManager->createLoginForm($lastUsername);
+
+        $lastError    = $this->app['security.last_error']($request);
+
+        if (null !== $lastError) {
+            $lastError = $this->app['translator']->trans($lastError);
+            $formLogin->addError(new FormError($lastError));
+        }
+
+
+        return $this->app['twig']->render(
+            'user/login.twig', ['formLogin' => $formLogin->createView()]
+        );
     }
 
     public function register(Request $request)
@@ -46,21 +72,5 @@ class UserControllerProvider implements ControllerProviderInterface
         return $this->app['twig']->render(
             'user/register.twig', ['formRegister' => $formRegister->createView()]
         );
-    }
-
-    public function userWidget(Request $request)
-    {
-        /* @var $userManager \User\UserManager */
-        $userManager = $this->app['user.manager'];
-        $formLogin   = $userManager->createLoginForm();
-
-        if (array_key_exists('signIn', $request->get('form', []))) {
-            // login form submitted
-            $formLogin->handleRequest($request);
-            $formData = $formLogin->getData();
-            $userManager->authenticate($formData['username'], $formData['password']);
-        }
-
-        $this->app['twig']->addGlobal('formLogin', $formLogin->createView());
     }
 } 

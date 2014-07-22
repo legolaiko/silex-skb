@@ -52,7 +52,8 @@ $app['translator.domains'] = array(
             'Password' => 'Пароль',
             'Repeat password' => 'Повторите пароль',
             'Remember me' => 'Запомнить меня',
-            'Sign in' => 'Войти'
+            'Sign in' => 'Войти',
+            'Bad credentials' => 'Неверное имя пользователя или пароль'
         )
     ),
     'validators' => array(

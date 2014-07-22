@@ -30,6 +30,7 @@ class UserFactory implements UserFactoryInterface
         }
         $user->setSalt($this->salt);
         $user->setRoles(['ROLE_USER']);
+        return $user;
     }
 
     /**
