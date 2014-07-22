@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use User\UserMapper\UserMapper;
+use User\UserMapper\UserMapperInterface;
 use User\UserUniqueConstraint\UserUniqueConstraint;
 
 class UserManager
@@ -20,20 +20,17 @@ class UserManager
     protected $encoderFactory;
     protected $authManager;
     protected $userMapper;
-    protected $salt;
 
     function __construct(
         FormFactoryInterface $formFactory,
         EncoderFactoryInterface $encoderFactory,
         AuthenticationManagerInterface $authManager,
-        UserMapper $userMapper,
-        $salt = 'ladkfn34')
+        UserMapperInterface $userMapper)
     {
         $this->formFactory    = $formFactory;
         $this->encoderFactory = $encoderFactory;
         $this->authManager    = $authManager;
         $this->userMapper     = $userMapper;
-        $this->salt           = $salt;
     }
 
     public function createLoginForm()
@@ -59,9 +56,7 @@ class UserManager
 
     public function createRegisterForm()
     {
-        $user = new User();
-        $user->setSalt($this->salt);
-        $user->setRoles(['ROLE_USER']);
+        $user = $this->userMapper->getUserFactory()->createUser();
 
         $form = $this->formFactory
             ->createBuilder('form', $user)
@@ -103,6 +98,11 @@ class UserManager
 
     public function authenticate($username, $password, $providerKey = 'user')
     {
-        $this->authManager->authenticate(new UsernamePasswordToken($username, $password, $providerKey));
+        try {
+            $this->authManager->authenticate(new UsernamePasswordToken($username, $password, $providerKey));
+        } catch (\Exception $e) {
+
+        }
+
     }
 } 

@@ -6,7 +6,8 @@ namespace User;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use User\UserMapper\UserMapper;
+use User\UserFactory\UserFactory;
+use User\UserMapper\UserMapperDbal;
 
 class UserServiceProvider implements ServiceProviderInterface
 {
@@ -20,8 +21,16 @@ class UserServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $app)
     {
+        $app['user.salt'] = '1234';
+
+        $app['user.class'] = 'User\User';
+
+        $app['user.factory'] = function() use ($app) {
+            return new UserFactory($app['user.salt'], $app['user.class']);
+        };
+
         $app['user.mapper'] = function() use ($app) {
-            return new UserMapper($app['db']);
+            return new UserMapperDbal($app['user.factory'], $app['db']);
         };
 
         $app['user.manager'] = function() use ($app) {
@@ -42,7 +51,7 @@ class UserServiceProvider implements ServiceProviderInterface
             return [
                 'user' => array(
                     'anonymous' => true,
-                    'http'      => true,
+                    'form'      => true,
                     'users'     => $app['user.provider']
                 )
             ];

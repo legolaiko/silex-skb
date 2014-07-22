@@ -3,11 +3,10 @@
 
 namespace User;
 
-
-use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use User\UserFactory\UserWritableInterface;
 
-class User implements AdvancedUserInterface
+class User implements AdvancedUserInterface, UserWritableInterface
 {
 
     protected $id;

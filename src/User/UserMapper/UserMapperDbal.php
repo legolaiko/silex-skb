@@ -3,21 +3,29 @@
 
 namespace User\UserMapper;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Core\User\UserInterface;
 use User\User;
+use User\UserFactory\UserFactoryInterface;
 
 
-class UserMapper
+class UserMapperDbal implements UserMapperInterface
 {
+    protected $userFactory;
     protected $dbConn;
     protected $userRolesMap;
 
-    public function __construct(Connection $dbConn)
+    public function __construct(UserFactoryInterface $userFactory, Connection $dbConn)
     {
-        $this->dbConn = $dbConn;
+        $this->userFactory = $userFactory;
+        $this->dbConn      = $dbConn;
     }
 
-    public function insertUser(User $user)
+    public function insertUser(UserInterface $user)
     {
+        $this->assertUser($user);
+        /* @var $user UserDbalInterface */
+
         $this->dbConn->insert(
             'user', [
                 'username' => $user->getUsername(),
@@ -26,13 +34,12 @@ class UserMapper
         );
 
         $user->setId($this->dbConn->lastInsertId());
-
         $this->saveUserRoles($user);
     }
 
     /**
      * @param $username
-     * @return bool|User false on failure
+     * @return bool|UserDbalInterface false on failure
      * @throws \Doctrine\DBAL\DBALException
      */
     public function findByUsername($username)
@@ -41,20 +48,41 @@ class UserMapper
             'SELECT * FROM user WHERE username = ?', [$username]
         );
 
-        $user = $stmt->fetch();
+        $user = $userData = $stmt->fetch();
 
-        if ($user) {
-            $user = (new User())
-                ->setUsername($user['username'])
-                ->setPassword($user['password']);
+        if ($userData) {
+            $user = $this->userFactory->createUser();
+            $this->assertUser($user);
+            /* @var $user UserDbalInterface */
 
-            $this->loadUserRoles($user);
+            $user->setId($userData['id']);
+            $user->setUsername($userData['username']);
+            $user->setPassword($userData['password']);
+            $this->loadUserRoles($userData);
         }
 
         return $user;
     }
 
-    protected function saveUserRoles(User $user)
+    /**
+     * Gets UserFactoryInterface associated with mapper
+     *
+     * @return UserFactoryInterface
+     */
+    public function getUserFactory()
+    {
+        return $this->userFactory;
+    }
+
+
+    protected function assertUser(UserInterface $user)
+    {
+        if (!($user instanceof UserDbalInterface)) {
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
+        }
+    }
+
+    protected function saveUserRoles(UserDbalInterface $user)
     {
         $this->dbConn->delete('user_to_user_role', [
            'user_id' => $user->getId()
@@ -72,7 +100,7 @@ class UserMapper
         }
     }
 
-    protected function loadUserRoles(User $user)
+    protected function loadUserRoles(UserDbalInterface $user)
     {
         $stmt = $this->dbConn->executeQuery(
             'SELECT ur.name FROM user_role ur, user_to_user_role utur WHERE ur.id = utur.role_id AND utur.user_id = ?',
