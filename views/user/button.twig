@@ -1,0 +1,22 @@
+{% if is_granted('ROLE_USER') %}
+    {% set user = app.security.getToken().getUser() %}
+    <div class="dropdown navbar-btn navbar-right">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown">
+            <span class="glyphicon glyphicon-user" style="padding-right: 0.5em;"></span>
+            {{ user.username }}
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="userDropdown">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+            <li role="presentation" class="divider"></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('user_logout') }}">{{ 'Sign out'|trans }}</a></li>
+        </ul>
+    </div>
+{% else %}
+    <a href="{{ url('/user/login') }}" class="btn btn-primary navbar-btn navbar-right">
+        <span class="glyphicon glyphicon-user" style="padding-right: 0.5em;"></span>
+        {{ 'Sign in'|trans }}
+    </a>
+{% endif %}

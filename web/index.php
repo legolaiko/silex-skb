@@ -65,9 +65,17 @@ $app['translator.domains'] = array(
 );
 $app['translator']->setLocale('ru');
 
+$app['session.storage.handler'] = function() use ($app) {
+    return new \Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler(
+        $app['db']->getWrappedConnection(),
+        ['db_table' => 'session']
+    );
+};
+
 
 
 $app->match('/', function () use ($app) {
+    $t = $app['security']->getToken();
     return $app['twig']->render('layout.twig');
 })->bind('/');
 

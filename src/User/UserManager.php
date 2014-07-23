@@ -8,9 +8,11 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use User\UserFactory\UserWritableInterface;
 use User\UserMapper\UserMapperInterface;
 use User\UserUniqueConstraint\UserUniqueConstraint;
 
@@ -84,24 +86,23 @@ class UserManager
     }
 
 
-    public function registerUser(User $user, $isPasswordEncoded = false)
+    public function registerUser(UserWritableInterface $user, $autoLogin = true)
     {
-        if (!$isPasswordEncoded) {
-            $encoder = $this->encoderFactory->getEncoder($user);
-            $pwdEncoded = $encoder->encodePassword($user->getPassword(), $user->getSalt());
-            $user->setPassword($pwdEncoded);
-        }
-
+        $encoder    = $this->encoderFactory->getEncoder($user);
+        $pwd        = $user->getPassword();
+        $pwdEncoded = $encoder->encodePassword($user->getPassword(), $user->getSalt());
+        $user->setPassword($pwdEncoded);
         $this->userMapper->insertUser($user);
+
+        /*if ($autoLogin) {
+            $this->authManager->authenticate(new UsernamePasswordToken($user->getUsername(), $pwd, 'user'));
+        }*/
+
+        return $this;
     }
 
-    public function authenticate($username, $password, $providerKey = 'user')
+    public function authenticateUser(UserInterface $user)
     {
-        try {
-            $this->authManager->authenticate(new UsernamePasswordToken($username, $password, $providerKey));
-        } catch (\Exception $e) {
-
-        }
 
     }
 } 

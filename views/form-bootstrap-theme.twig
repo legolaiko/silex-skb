@@ -68,11 +68,13 @@
 {% block form_errors %}
     {% spaceless %}
         {% if errors|length > 0 %}
+            {% if form.vars.compound %}<div class="alert alert-danger" role="alert">{% endif %}
             <ul class="form-errors">
                 {% for error in errors %}
                     <li>{{ error.message }}</li>
                 {% endfor %}
             </ul>
+            {% if form.vars.compound %}</div>{% endif %}
         {% endif %}
     {% endspaceless %}
 {% endblock form_errors %}

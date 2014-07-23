@@ -66,7 +66,8 @@ class UserControllerProvider implements ControllerProviderInterface
         $formRegister->handleRequest($request);
 
         if ($formRegister->isValid()) {
-            $userManager->registerUser($formRegister->getData());
+            $user = $formRegister->getData();
+            $userManager->registerUser($user);
         }
 
         return $this->app['twig']->render(

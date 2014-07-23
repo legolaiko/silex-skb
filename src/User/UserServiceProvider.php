@@ -22,6 +22,7 @@ class UserServiceProvider implements ServiceProviderInterface
     public function register(Container $app)
     {
         $app['user.salt'] = '1234';
+        $app['user.remember_me_key'] = '1234';
 
         $app['user.class'] = 'User\User';
 
@@ -50,8 +51,8 @@ class UserServiceProvider implements ServiceProviderInterface
         $app['security.firewalls'] = function() use ($app) {
             return [
                 'user' => array(
-                    'anonymous' => true,
-                    'form'      => [
+                    'anonymous'   => true,
+                    'form'        => [
                         'login_path'         => '/user/login',
                         'check_path'         => '/user/login_check',
                         'username_parameter' => 'form[username]',
@@ -60,7 +61,12 @@ class UserServiceProvider implements ServiceProviderInterface
                         'with_csrf'          => true,
                         'intention'          => 'form'
                     ],
-                    'users'     => $app['user.provider']
+                    'remember_me' => [
+                        'key'                   => $app['user.remember_me_key'],
+                        'remember_me_parameter' => 'form[rememberMe]'
+                    ],
+                    'logout'      => ['logout_path' => '/user/logout'],
+                    'users'       => $app['user.provider']
                 )
             ];
         };
