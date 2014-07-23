@@ -3,9 +3,10 @@
 
 namespace User;
 
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use User\UserMapper\UserDbalInterface;
 
-class User implements UserDbalInterface
+class User implements UserDbalInterface, AdvancedUserInterface
 {
 
     protected $id;
@@ -78,7 +79,7 @@ class User implements UserDbalInterface
      */
     public function eraseCredentials()
     {
-        // TODO: Implement eraseCredentials() method.
+
     }
 
     /**
@@ -86,7 +87,7 @@ class User implements UserDbalInterface
      */
     public function isCredentialsNonExpired()
     {
-        // TODO: Implement isCredentialsNonExpired() method.
+        return true;
     }
 
     /**
@@ -141,6 +142,11 @@ class User implements UserDbalInterface
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    public function setEnabled($isEnabled)
+    {
+        $this->isEnabled = $isEnabled;
     }
 
 

@@ -11,6 +11,8 @@ interface UserWritableInterface extends UserInterface
 
     public function setPassword($password);
 
+    public function setEnabled($isEnabled);
+
     public function setSalt($salt);
 
     public function setRoles($roles);

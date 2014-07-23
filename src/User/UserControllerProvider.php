@@ -7,6 +7,7 @@ use Silex\ControllerCollection;
 use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserControllerProvider implements ControllerProviderInterface
@@ -68,10 +69,14 @@ class UserControllerProvider implements ControllerProviderInterface
         if ($formRegister->isValid()) {
             $user = $formRegister->getData();
             $userManager->registerUser($user);
+            $userManager->authenticateForced($user);
+            $response = new RedirectResponse('/');
+        } else {
+            $response = $this->app['twig']->render(
+                'user/register.twig', ['formRegister' => $formRegister->createView()]
+            );
         }
 
-        return $this->app['twig']->render(
-            'user/register.twig', ['formRegister' => $formRegister->createView()]
-        );
+        return $response;
     }
 } 

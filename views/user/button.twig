@@ -2,7 +2,7 @@
     {% set user = app.security.getToken().getUser() %}
     <div class="dropdown navbar-btn navbar-right">
         <button class="btn btn-primary dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown">
-            <span class="glyphicon glyphicon-user" style="padding-right: 0.5em;"></span>
+            <span class="glyphicon glyphicon-user glyphicon-left"></span>
             {{ user.username }}
             <span class="caret"></span>
         </button>
@@ -16,7 +16,7 @@
     </div>
 {% else %}
     <a href="{{ url('/user/login') }}" class="btn btn-primary navbar-btn navbar-right">
-        <span class="glyphicon glyphicon-user" style="padding-right: 0.5em;"></span>
+        <span class="glyphicon glyphicon-log-in glyphicon-left"></span>
         {{ 'Sign in'|trans }}
     </a>
 {% endif %}

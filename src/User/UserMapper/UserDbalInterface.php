@@ -2,8 +2,6 @@
 
 namespace User\UserMapper;
 
-
-use Symfony\Component\Security\Core\User\UserInterface;
 use User\UserFactory\UserWritableInterface;
 
 interface UserDbalInterface extends UserWritableInterface

@@ -35,11 +35,10 @@ class UserServiceProvider implements ServiceProviderInterface
         };
 
         $app['user.manager'] = function() use ($app) {
-            // TODO implement 'assertRegistered' method for dependent services
             return new UserManager(
                 $app['form.factory'],
                 $app['security.encoder_factory'],
-                $app['security.authentication_manager'],
+                $app['security'],
                 $app['user.mapper']
             );
         };

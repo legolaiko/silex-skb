@@ -8,6 +8,8 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
@@ -20,19 +22,19 @@ class UserManager
 {
     protected $formFactory;
     protected $encoderFactory;
-    protected $authManager;
+    protected $securityContext;
     protected $userMapper;
 
     function __construct(
         FormFactoryInterface $formFactory,
         EncoderFactoryInterface $encoderFactory,
-        AuthenticationManagerInterface $authManager,
+        SecurityContextInterface $securityContext,
         UserMapperInterface $userMapper)
     {
-        $this->formFactory    = $formFactory;
-        $this->encoderFactory = $encoderFactory;
-        $this->authManager    = $authManager;
-        $this->userMapper     = $userMapper;
+        $this->formFactory     = $formFactory;
+        $this->encoderFactory  = $encoderFactory;
+        $this->securityContext = $securityContext;
+        $this->userMapper      = $userMapper;
     }
 
     /**
@@ -86,23 +88,17 @@ class UserManager
     }
 
 
-    public function registerUser(UserWritableInterface $user, $autoLogin = true)
+    public function registerUser(UserWritableInterface $user)
     {
         $encoder    = $this->encoderFactory->getEncoder($user);
-        $pwd        = $user->getPassword();
         $pwdEncoded = $encoder->encodePassword($user->getPassword(), $user->getSalt());
         $user->setPassword($pwdEncoded);
         $this->userMapper->insertUser($user);
-
-        /*if ($autoLogin) {
-            $this->authManager->authenticate(new UsernamePasswordToken($user->getUsername(), $pwd, 'user'));
-        }*/
-
         return $this;
     }
 
-    public function authenticateUser(UserInterface $user)
+    public function authenticateForced(UserInterface $user, $providerKey = 'user')
     {
-
+        $this->securityContext->setToken(new UsernamePasswordToken($user, null, $providerKey));
     }
 } 

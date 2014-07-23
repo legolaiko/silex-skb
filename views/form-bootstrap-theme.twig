@@ -71,7 +71,7 @@
             {% if form.vars.compound %}<div class="alert alert-danger" role="alert">{% endif %}
             <ul class="form-errors">
                 {% for error in errors %}
-                    <li>{{ error.message }}</li>
+                    <li><span class="glyphicon glyphicon-exclamation-sign glyphicon-left"></span>{{ error.message }}</li>
                 {% endfor %}
             </ul>
             {% if form.vars.compound %}</div>{% endif %}
