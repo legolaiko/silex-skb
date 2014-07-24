@@ -9,6 +9,8 @@ use Silex\Application;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class UserControllerProvider implements ControllerProviderInterface
 {
@@ -39,23 +41,23 @@ class UserControllerProvider implements ControllerProviderInterface
 
     public function login(Request $request)
     {
-        /* @var $userManager \User\UserManager */
-        $userManager  = $this->app['user.manager'];
-
+        // retrieving auth errors
         $lastUsername = $this->app['session']->get('_security.last_username');
-        $formLogin    = $userManager->createLoginForm($lastUsername);
-
         $lastError    = $this->app['security.last_error']($request);
+
+        $formLogin = $this->app['form.factory']->create(
+            $this->app['user.form.login'], null, [
+                'username' => $lastUsername,
+                'action'   => '/user/login_check'
+            ]
+        );
 
         if (null !== $lastError) {
             $lastError = $this->app['translator']->trans($lastError);
             $formLogin->addError(new FormError($lastError));
         }
 
-
-        return $this->app['twig']->render(
-            'user/login.twig', ['formLogin' => $formLogin->createView()]
-        );
+        return $this->render('user/login', ['formLogin' => $formLogin->createView()]);
     }
 
     public function register(Request $request)
@@ -78,5 +80,17 @@ class UserControllerProvider implements ControllerProviderInterface
         }
 
         return $response;
+    }
+
+    /**
+     * Renders view. Override this method to use custom template engine
+     *
+     * @param string $view    View path (without extension)
+     * @param array  $context View context
+     * @return string
+     */
+    protected function render($view, $context = [])
+    {
+        return $this->app['twig']->render($view . '.twig', $context);
     }
 } 

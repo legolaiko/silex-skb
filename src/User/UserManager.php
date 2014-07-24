@@ -67,7 +67,7 @@ class UserManager
                 'constraints' => [
                     new Email(),
                     new Length(['min' => 4, 'max' => 128]),
-                    new UserUniqueConstraint($this->userMapper),
+                    new UserUniqueConstraint(),
                     new NotBlank()
                 ],
                 'label' => 'Email'

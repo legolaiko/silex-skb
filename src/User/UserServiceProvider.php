@@ -7,7 +7,9 @@ namespace User;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use User\UserFactory\UserFactory;
+use User\UserFormType\UserLoginType;
 use User\UserMapper\UserMapperDbal;
+use User\UserUniqueConstraint\UserUniqueConstraintValidator;
 
 class UserServiceProvider implements ServiceProviderInterface
 {
@@ -47,6 +49,21 @@ class UserServiceProvider implements ServiceProviderInterface
             return new UserProvider($app['user.mapper']);
         };
 
+        if (!isset($app['validator.validator_service_ids'])) {
+            $app['validator.validator_service_ids'] = [];
+        }
+
+        $app['validator.validator_service_ids'] = $app['validator.validator_service_ids']
+            + ['user.validator.unique' => 'user.validator.unique'];
+
+        $app['user.validator.unique'] = function() use ($app) {
+            return new UserUniqueConstraintValidator($app['user.mapper']);
+        };
+
+        $app['user.form.login'] = function() {
+            return new UserLoginType();
+        };
+
         $app['security.firewalls'] = function() use ($app) {
             return [
                 'user' => array(
@@ -54,11 +71,11 @@ class UserServiceProvider implements ServiceProviderInterface
                     'form'        => [
                         'login_path'         => '/user/login',
                         'check_path'         => '/user/login_check',
-                        'username_parameter' => 'form[username]',
-                        'password_parameter' => 'form[password]',
-                        'csrf_parameter'     => 'form[_token]',
+                        'username_parameter' => 'auth[username]',
+                        'password_parameter' => 'auth[password]',
+                        'csrf_parameter'     => 'auth[_token]',
                         'with_csrf'          => true,
-                        'intention'          => 'form'
+                        'intention'          => 'auth'
                     ],
                     'remember_me' => [
                         'key'                   => $app['user.remember_me_key'],

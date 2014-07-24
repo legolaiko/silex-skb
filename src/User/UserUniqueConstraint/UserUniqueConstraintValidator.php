@@ -6,9 +6,17 @@ namespace User\UserUniqueConstraint;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use User\UserMapper\UserMapperInterface;
 
 class UserUniqueConstraintValidator extends ConstraintValidator
 {
+    protected $userMapper;
+
+    public function __construct(UserMapperInterface $userMapper)
+    {
+        $this->userMapper = $userMapper;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -16,9 +24,9 @@ class UserUniqueConstraintValidator extends ConstraintValidator
     {
         /* @var $constraint \User\UserUniqueConstraint\UserUniqueConstraint */
 
-        $user = $constraint->getUserMapper()->findByUsername($value);
+        $user = $this->userMapper->findByUsername($value);
         if ($user) {
-            $this->context->addViolation($constraint->getMessage());
+            $this->context->addViolation($constraint->message);
         }
     }
 
