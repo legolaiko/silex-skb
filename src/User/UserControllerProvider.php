@@ -6,9 +6,14 @@ namespace User;
 use Silex\ControllerCollection;
 use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
+use Silex\Provider\Translation\Translator;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
+use User\UserFactory\UserFactoryInterface;
 
 class UserControllerProvider implements ControllerProviderInterface
 {
@@ -28,22 +33,22 @@ class UserControllerProvider implements ControllerProviderInterface
         /* @var $controllers ControllerCollection */
         $controllers = $app['controllers_factory'];
 
-        $controllers->match('register', [$this, 'register'])
-            ->bind('/user/register');
-
-        $controllers->match('login', [$this, 'login'])
-            ->bind('/user/login');
+        $controllers->match('register', [$this, 'actionRegister']);
+        $controllers->match('login',    [$this, 'actionLogin']);
 
         return $controllers;
     }
 
-    public function login(Request $request)
+    public function actionLogin(Request $request)
     {
-        // retrieving auth errors
-        $lastUsername = $this->app['session']->get('_security.last_username');
+        // retrieving auth error
+        /** @var Session $session */
+        $session      = $this->app['session'];
+        $lastUsername = $session->get('_security.last_username');
         $lastError    = $this->app['security.last_error']($request);
 
-        $formLogin = $this->app['form.factory']->create(
+        /** @var FormInterface $formLogin */
+        $formLogin = $this->createForm(
             $this->app['user.form.login'], null, [
                 'username' => $lastUsername,
                 'action'   => '/user/login_check'
@@ -51,34 +56,45 @@ class UserControllerProvider implements ControllerProviderInterface
         );
 
         if (null !== $lastError) {
-            $lastError = $this->app['translator']->trans($lastError);
-            $formLogin->addError(new FormError($lastError));
+            /** @var Translator $trans */
+            $trans = $this->app['translator'];
+
+            // TODO Move to FormType. Don't know how addError in a FormType context
+            $formLogin->addError(new FormError($trans->trans($lastError)));
         }
 
         return $this->render('user/login', ['formLogin' => $formLogin->createView()]);
     }
 
-    public function register(Request $request)
+    public function actionRegister(Request $request)
     {
-        /* @var $userManager \User\UserManager */
-        $userManager  = $this->app['user.manager'];
-        $formRegister = $userManager->createRegisterForm();
+
+        /** @var UserUtils $userUtils */
+        $userUtils = $this->app['user.utils'];
+
+        $formRegister = $this->createForm(
+            $this->app['user.form.register'],
+            $userUtils->getUserMapper()->getUserFactory()->createUser()
+        );
 
         $formRegister->handleRequest($request);
 
         if ($formRegister->isValid()) {
             $user = $formRegister->getData();
-            $userManager->registerUser($user);
-            $userManager->authenticateForced($user);
+            $userUtils->encodePassword($user);
+            $userUtils->getUserMapper()->insertUser($user);
+            $userUtils->authenticateForced($user);
             $response = new RedirectResponse('/');
         } else {
-            $response = $this->app['twig']->render(
-                'user/register.twig', ['formRegister' => $formRegister->createView()]
+            $response = $this->render(
+                'user/register', ['formRegister' => $formRegister->createView()]
             );
         }
 
         return $response;
     }
+
+
 
     /**
      * Renders view. Override this method to use custom template engine
@@ -89,6 +105,15 @@ class UserControllerProvider implements ControllerProviderInterface
      */
     protected function render($view, $context = [])
     {
-        return $this->app['twig']->render($view . '.twig', $context);
+        /** @var \Twig_Environment $twig */
+        $twig = $this->app['twig'];
+        return $twig->render($view . '.twig', $context);
+    }
+
+    protected function createForm($form = 'form', $data = null, $options = [])
+    {
+        /** @var FormFactory $formFactory */
+        $formFactory = $this->app['form.factory'];
+        return $formFactory->create($form, $data, $options);
     }
 } 

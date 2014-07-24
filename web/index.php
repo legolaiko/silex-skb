@@ -2,18 +2,16 @@
 require_once __DIR__.'/../vendor/autoload.php';
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
-
 $config = [
   'debug' => true
 ];
 
 $app = new \Silex\Application($config);
 
-$app->register(new Silex\Provider\TwigServiceProvider(), array(
-    'twig.path' => array(
-        __DIR__.'/../views'
-    )
-));
+$app->register(new Silex\Provider\TwigServiceProvider(), [
+    'twig.path' => [__DIR__.'/../views'],
+    // 'twig.options' => ['cache' => __DIR__.'/../cache']
+]);
 $app->register(new \Silex\Provider\FormServiceProvider());
 $app->register(new \Silex\Provider\TranslationServiceProvider());
 $app->register(new \Silex\Provider\LocaleServiceProvider());

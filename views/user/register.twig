@@ -5,8 +5,8 @@
     <div class="row user-forms">
         <div class="col-md-5">
             <ul class="nav nav-tabs">
-                <li><a href="{{ url('/user/login') }}">{{ 'Sign in'|trans }}</a></li>
-                <li class="active"><a href="{{ url('/user/register') }}">{{ 'Sign up'|trans }}</a></li>
+                <li><a href="{{ url('user_login') }}">{{ 'Sign in'|trans }}</a></li>
+                <li class="active"><a href="{{ url('user_register') }}">{{ 'Sign up'|trans }}</a></li>
             </ul>
             {{ form(formRegister) }}
         </div>

@@ -10,6 +10,7 @@ vendor/*
 
 vagrant/.vagrant
 
+cache/*
 
 projectFilesBackup
 .DS_Store

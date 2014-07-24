@@ -10,7 +10,7 @@ use User\UserUniqueConstraint\UserUniqueConstraint;
 
 abstract class UserAbstractType extends AbstractType
 {
-    protected function getEmailOptions()
+    protected function getUsernameOptions()
     {
         return [
             'constraints' => [

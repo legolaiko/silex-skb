@@ -8,6 +8,7 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use User\UserFactory\UserFactory;
 use User\UserFormType\UserLoginType;
+use User\UserFormType\UserRegisterType;
 use User\UserMapper\UserMapperDbal;
 use User\UserUniqueConstraint\UserUniqueConstraintValidator;
 
@@ -23,10 +24,9 @@ class UserServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $app)
     {
-        $app['user.salt'] = '1234';
+        $app['user.salt']            = '1234';
         $app['user.remember_me_key'] = '1234';
-
-        $app['user.class'] = 'User\User';
+        $app['user.class']           = 'User\User';
 
         $app['user.factory'] = function() use ($app) {
             return new UserFactory($app['user.salt'], $app['user.class']);
@@ -36,9 +36,8 @@ class UserServiceProvider implements ServiceProviderInterface
             return new UserMapperDbal($app['user.factory'], $app['db']);
         };
 
-        $app['user.manager'] = function() use ($app) {
-            return new UserManager(
-                $app['form.factory'],
+        $app['user.utils'] = function() use ($app) {
+            return new UserUtils(
                 $app['security.encoder_factory'],
                 $app['security'],
                 $app['user.mapper']
@@ -47,6 +46,14 @@ class UserServiceProvider implements ServiceProviderInterface
 
         $app['user.provider'] = function() use ($app) {
             return new UserProvider($app['user.mapper']);
+        };
+
+        $app['user.form.login'] = function() {
+            return new UserLoginType();
+        };
+
+        $app['user.form.register'] = function() {
+            return new UserRegisterType();
         };
 
         if (!isset($app['validator.validator_service_ids'])) {
@@ -58,10 +65,6 @@ class UserServiceProvider implements ServiceProviderInterface
 
         $app['user.validator.unique'] = function() use ($app) {
             return new UserUniqueConstraintValidator($app['user.mapper']);
-        };
-
-        $app['user.form.login'] = function() {
-            return new UserLoginType();
         };
 
         $app['security.firewalls'] = function() use ($app) {
@@ -79,13 +82,15 @@ class UserServiceProvider implements ServiceProviderInterface
                     ],
                     'remember_me' => [
                         'key'                   => $app['user.remember_me_key'],
-                        'remember_me_parameter' => 'form[rememberMe]'
+                        'remember_me_parameter' => 'auth[rememberMe]'
                     ],
                     'logout'      => ['logout_path' => '/user/logout'],
                     'users'       => $app['user.provider']
                 )
             ];
         };
+
+
     }
 
 } 
