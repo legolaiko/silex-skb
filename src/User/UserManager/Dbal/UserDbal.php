@@ -1,12 +1,11 @@
 <?php
 
 
-namespace User;
+namespace User\UserManager\Dbal;
 
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
-use User\UserMapper\UserDbalInterface;
 
-class User implements UserDbalInterface, AdvancedUserInterface
+class UserDbal implements UserDbalInterface
 {
 
     protected $id;
@@ -92,7 +91,7 @@ class User implements UserDbalInterface, AdvancedUserInterface
 
     /**
      * @param string $username
-     * @return User
+     * @return UserDbal
      */
     public function setUsername($username)
     {
@@ -102,7 +101,7 @@ class User implements UserDbalInterface, AdvancedUserInterface
 
     /**
      * @param string $password
-     * @return User
+     * @return UserDbal
      */
     public function setPassword($password)
     {
@@ -112,7 +111,7 @@ class User implements UserDbalInterface, AdvancedUserInterface
 
     /**
      * @param string $salt
-     * @return User
+     * @return UserDbal
      */
     public function setSalt($salt)
     {
@@ -148,6 +147,4 @@ class User implements UserDbalInterface, AdvancedUserInterface
     {
         $this->isEnabled = $isEnabled;
     }
-
-
 } 

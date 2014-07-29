@@ -1,12 +1,15 @@
 <?php
 
-namespace User\UserFactory;
+namespace User\UserManager\Dbal;
 
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
-use Symfony\Component\Security\Core\User\UserInterface;
-
-interface UserWritableInterface extends UserInterface
+interface UserDbalInterface extends AdvancedUserInterface
 {
+    public function getId();
+
+    public function setId($id);
+
     public function setUsername($username);
 
     public function setPassword($password);

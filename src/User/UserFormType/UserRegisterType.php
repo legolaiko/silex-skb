@@ -14,7 +14,7 @@ class UserRegisterType extends UserAbstractType
      */
     public function getName()
     {
-        return 'register';
+        return 'form_register';
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

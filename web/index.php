@@ -29,15 +29,13 @@ $app->register(new \Silex\Provider\DoctrineServiceProvider(), [
 ]);
 $app->register(new \Silex\Provider\ValidatorServiceProvider());
 $app->register(new \Silex\Provider\SessionServiceProvider());
-
-$app->register(new \User\UserServiceProvider());
 $app->register(new \Silex\Provider\SecurityServiceProvider());
 $app->register(new \Silex\Provider\RememberMeServiceProvider());
+$app->register(new \Silex\Provider\ServiceControllerServiceProvider());
 
 
 
-
-$app->mount('user', new \User\UserControllerProvider());
+$app->register(new \User\UserServiceProvider());
 
 
 
@@ -73,7 +71,6 @@ $app['session.storage.handler'] = function() use ($app) {
 
 
 $app->match('/', function () use ($app) {
-    $t = $app['security']->getToken();
     return $app['twig']->render('layout.twig');
 })->bind('/');
 

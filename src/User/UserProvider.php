@@ -7,15 +7,17 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use User\UserMapper\UserMapperInterface;
+use User\UserManager\UserManagerInterface;
 
 class UserProvider implements UserProviderInterface {
 
     protected $userMapper;
+    protected $supportedClass;
 
-    public function __construct(UserMapperInterface $userMapper)
+    public function __construct(UserManagerInterface $userMapper, $supportedClass)
     {
-        $this->userMapper = $userMapper;
+        $this->userMapper     = $userMapper;
+        $this->supportedClass = $supportedClass;
     }
 
     public function loadUserByUsername($username)
@@ -40,6 +42,6 @@ class UserProvider implements UserProviderInterface {
 
     public function supportsClass($class)
     {
-        return $class === $this->userMapper->getUserFactory()->getUserClass();
+        return $class === $this->supportedClass;
     }
 } 

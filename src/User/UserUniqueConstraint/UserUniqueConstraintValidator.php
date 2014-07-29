@@ -6,13 +6,13 @@ namespace User\UserUniqueConstraint;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use User\UserMapper\UserMapperInterface;
+use User\UserManager\UserManagerInterface;
 
 class UserUniqueConstraintValidator extends ConstraintValidator
 {
     protected $userMapper;
 
-    public function __construct(UserMapperInterface $userMapper)
+    public function __construct(UserManagerInterface $userMapper)
     {
         $this->userMapper = $userMapper;
     }

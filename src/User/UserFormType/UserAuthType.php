@@ -5,16 +5,13 @@ namespace User\UserFormType;
 
 
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class UserLoginType extends UserAbstractType
+class UserAuthType extends UserAbstractType
 {
     public function getName()
     {
-        return 'auth';
+        return 'form_auth';
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

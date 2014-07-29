@@ -13,6 +13,7 @@ abstract class UserAbstractType extends AbstractType
     protected function getUsernameOptions()
     {
         return [
+            'label' => 'Email',
             'constraints' => [
                 new Email(),
                 new Length(['min' => 4, 'max' => 128]),
