@@ -1,8 +1,9 @@
 <?php
 
 
-class UserRegisterTest extends  \Silex\WebTestCase
+class UserRegisterTest extends \Silex\WebTestCase
 {
+
     public function testEntryPage()
     {
         $client  = $this->createClient();
