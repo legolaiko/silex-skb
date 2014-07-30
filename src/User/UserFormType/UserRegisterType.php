@@ -21,6 +21,7 @@ class UserRegisterType extends UserAbstractType
     {
         $builder
             ->add('username', 'email',    $this->getUsernameOptions())
+            ->add('nickname', 'text',     $this->getNicknameOptions())
             ->add('password', 'repeated', $this->getPasswordRepeatedOptions())
             ->add('signUp',   'submit');
     }

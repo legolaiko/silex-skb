@@ -45,6 +45,7 @@ $app['translator.domains'] = array(
             'Register new user' => 'Регистрация пользователя',
             'Sign up' => 'Зарегистрироваться',
             'Email' => 'Почта',
+            'Nickname' => 'Имя на сайте',
             'Password' => 'Пароль',
             'Repeat password' => 'Повторите пароль',
             'Remember me' => 'Запомнить меня',

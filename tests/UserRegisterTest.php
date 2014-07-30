@@ -32,6 +32,7 @@ class UserRegisterTest extends \Silex\WebTestCase
         $form    = $crawler->selectButton('form_register_signUp')->form();
         $crawler = $client->submit($form, [
             'form_register[username]'         => $username,
+            'form_register[nickname]'         => $nickname,
             'form_register[password][first]'  => $password,
             'form_register[password][second]' => $repeatPassword
         ]);
@@ -55,6 +56,7 @@ class UserRegisterTest extends \Silex\WebTestCase
     {
         $user = [
             'username' => 'test@test.com',
+            'nickname' => 'Test',
             'password' => '1234'
         ];
 
@@ -63,6 +65,7 @@ class UserRegisterTest extends \Silex\WebTestCase
         $form    = $crawler->selectButton('form_register_signUp')->form();
         $crawler = $client->submit($form, [
             'form_register[username]'         => $user['username'],
+            'form_register[nickname]'         => $user['nickname'],
             'form_register[password][first]'  => $user['password'],
             'form_register[password][second]' => $user['password']
         ]);

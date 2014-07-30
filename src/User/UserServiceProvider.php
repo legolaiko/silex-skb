@@ -10,13 +10,15 @@ use Pimple\ServiceProviderInterface;
 use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
 use Silex\ControllerCollection;
-use User\UserController\UserController;
+use User\UserController\LoginController;
+use User\UserController\RegisterController;
 use User\UserFactory\UserFactory;
 use User\UserFormType\Extension\UserFormExtension;
 use User\UserFormType\UserAuthType;
 use User\UserFormType\UserRegisterType;
 use User\UserManager\Dbal\UserDbalManager;
 use User\UserUniqueConstraint\UserUniqueConstraintValidator;
+use User\ViewRenderer\TwigRenderer;
 
 class UserServiceProvider implements ServiceProviderInterface, ControllerProviderInterface
 {
@@ -32,9 +34,10 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
     {
         /** @var Application $app */
 
-        $app['user.salt']            = '1234';
-        $app['user.remember_me_key'] = '1234';
-        $app['user.class']           = 'User\\UserManager\\Dbal\\UserDbal';
+        $app['user.salt']                = '1234';
+        $app['user.remember_me_key']     = '1234';
+        $app['user.class']               = 'User\\UserManager\\Dbal\\UserDbal';
+        $app['user.default_target_path'] = 'user_profile';
 
 
         $app['user.manager'] = function() use ($app) {
@@ -79,13 +82,14 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
                 'user' => array(
                     'anonymous'   => true,
                     'form'        => [
-                        'login_path'         => '/user/login',
-                        'check_path'         => '/user/login_check',
-                        'username_parameter' => 'form_auth[username]',
-                        'password_parameter' => 'form_auth[password]',
-                        'csrf_parameter'     => 'form_auth[_token]',
-                        'with_csrf'          => true,
-                        'intention'          => 'form_auth'
+                        'login_path'          => '/user/login',
+                        'check_path'          => '/user/login_check',
+                        'username_parameter'  => 'form_auth[username]',
+                        'password_parameter'  => 'form_auth[password]',
+                        'csrf_parameter'      => 'form_auth[_token]',
+                        'with_csrf'           => true,
+                        'intention'           => 'form_auth',
+                        'default_target_path' => $app['user.default_target_path']
                     ],
                     'remember_me' => [
                         'key'                   => $app['user.remember_me_key'],
@@ -97,14 +101,25 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
             ];
         };
 
-        $app['user.controller'] = function() use($app) {
-            return new UserController(
+        $app['user.renderer'] = function() use($app) {
+            return new TwigRenderer($app['twig']);
+        };
+
+        $app['user.controller.login'] = function() use($app) {
+            return new LoginController(
                 $app['form.factory'],
                 $app['session'],
                 $app['security.last_error'],
                 $app['translator'],
+                $app['user.renderer']
+            );
+        };
+
+        $app['user.controller.register'] = function() use($app) {
+            return new RegisterController(
+                $app['form.factory'],
                 $app['user.manager'],
-                $app['twig']
+                $app['user.renderer']
             );
         };
 
@@ -116,8 +131,9 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
     {
         /* @var $controllers ControllerCollection */
         $controllers = $app['controllers_factory'];
-        $controllers->match('register', 'user.controller:register');
-        $controllers->match('login',    'user.controller:login');
+        $controllers->match('register', 'user.controller.register:handle');
+        $controllers->match('login',    'user.controller.login:handle');
+        $controllers->match('profile',  function() {return 'ok!';});
         return $controllers;
     }
 

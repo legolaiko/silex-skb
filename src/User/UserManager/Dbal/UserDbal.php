@@ -14,6 +14,7 @@ class UserDbal implements UserDbalInterface
     protected $isEnabled           = true;
     protected $roles               = [];
     protected $username;
+    protected $nickname;
     protected $password;
     protected $salt;
 
@@ -147,4 +148,16 @@ class UserDbal implements UserDbalInterface
     {
         $this->isEnabled = $isEnabled;
     }
+
+    public function getNickname()
+    {
+        return $this->nickname;
+    }
+
+    public function setNickname($nickname)
+    {
+        $this->nickname = $nickname;
+    }
+
+
 } 

@@ -81,6 +81,8 @@ class UserDbalManager implements UserManagerInterface
         $user->setId($userData['id']);
         $user->setUsername($userData['username']);
         $user->setPassword($userData['password']);
+        $user->setNickname($userData['nickname']);
+        $user->setEnabled($userData['enabled']);
 
         return $this;
     }
@@ -89,7 +91,9 @@ class UserDbalManager implements UserManagerInterface
     {
         return [
             'username' => $user->getUsername(),
-            'password' => $user->getPassword()
+            'password' => $user->getPassword(),
+            'nickname' => $user->getNickname(),
+            'enabled'  => $user->isEnabled()
         ];
     }
 

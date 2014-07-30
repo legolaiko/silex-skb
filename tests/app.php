@@ -33,5 +33,6 @@ $app['exception_handler']->disable();
 // flushing test DB
 $app['db']->executeQuery('DELETE FROM user WHERE 1');
 
+
 return $app;
 

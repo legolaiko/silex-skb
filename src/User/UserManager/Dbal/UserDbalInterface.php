@@ -10,6 +10,10 @@ interface UserDbalInterface extends AdvancedUserInterface
 
     public function setId($id);
 
+    public function getNickname();
+
+    public function setNickname($nickname);
+
     public function setUsername($username);
 
     public function setPassword($password);

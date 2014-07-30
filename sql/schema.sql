@@ -3,9 +3,12 @@
 CREATE TABLE user (
   id int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   username varchar(128) NOT NULL,
+  nickname varchar(255) DEFAULT NULL,
   password varchar(255) DEFAULT NULL,
+  enabled tinyint(1) DEFAULT 1,
   PRIMARY KEY (id),
-  UNIQUE INDEX UK_user_id (id)
+  UNIQUE INDEX UK_user_id (id),
+  UNIQUE INDEX UK_user_username (username)
 )
 ENGINE = INNODB
 CHARACTER SET utf8
@@ -18,7 +21,6 @@ CREATE TABLE user_role (
   PRIMARY KEY (id)
 )
 ENGINE = INNODB
-AUTO_INCREMENT = 1
 CHARACTER SET utf8
 COLLATE utf8_unicode_ci
 COMMENT = 'Table containing list of all available user roles';
