@@ -14,7 +14,7 @@ class UserAuthTest extends \Silex\WebTestCase {
         ]);
     }
 
-    public function testUserLogin($d)
+    public function testUserLogin()
     {
         $t = 1;
     }

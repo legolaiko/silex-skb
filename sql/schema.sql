@@ -1,3 +1,5 @@
+-- User schema
+
 CREATE TABLE user (
   id int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   username varchar(128) NOT NULL,
