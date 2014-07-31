@@ -45,7 +45,7 @@ class UserDbalManager implements UserManagerInterface
         $this->assertUser($user);
         /* @var $user UserDbalInterface */
 
-        $this->encodePassword($user);
+        $this->ensurePasswordEncoded($user);
         $this->conn->insert(
             'user', $this->dumpToArray($user)
         );
@@ -53,6 +53,26 @@ class UserDbalManager implements UserManagerInterface
         $user->setId($this->conn->lastInsertId());
         $this->saveUserRoles($user);
     }
+
+    /**
+     * Updates existing user in storage
+     *
+     * @param UserInterface $user
+     * @return void
+     */
+    public function updateUser(UserInterface $user)
+    {
+        $this->assertUser($user);
+        /* @var $user UserDbalInterface */
+
+        $this->ensurePasswordEncoded($user);
+        $this->conn->update(
+            'user', $this->dumpToArray($user), ['id' => $user->getId()]
+        );
+
+        $this->saveUserRoles($user);
+    }
+
 
     /**
      * @param $username
@@ -80,7 +100,7 @@ class UserDbalManager implements UserManagerInterface
     {
         $user->setId($userData['id']);
         $user->setUsername($userData['username']);
-        $user->setPassword($userData['password']);
+        $user->setPassword(new PasswordEncoded($userData['password']));
         $user->setNickname($userData['nickname']);
         $user->setEnabled($userData['enabled']);
 
@@ -91,16 +111,21 @@ class UserDbalManager implements UserManagerInterface
     {
         return [
             'username' => $user->getUsername(),
-            'password' => $user->getPassword(),
+            'password' => (string)$user->getPassword(),
             'nickname' => $user->getNickname(),
             'enabled'  => $user->isEnabled()
         ];
     }
 
-    protected function encodePassword(UserDbalInterface $user)
+    protected function ensurePasswordEncoded(UserDbalInterface $user)
     {
-        $pwdEncoded = $this->encoderFactory->getEncoder($user)->encodePassword($user->getPassword(),$user->getSalt());
-        $user->setPassword($pwdEncoded);
+        if (!($user->getPassword() instanceof PasswordEncoded)) {
+            $pwdEncoded = $this->encoderFactory
+                ->getEncoder($user)->encodePassword($user->getPassword(), $user->getSalt());
+            $pwdEncoded = new PasswordEncoded($pwdEncoded);
+            $user->setPassword($pwdEncoded);
+        }
+
         return $this;
     }
 

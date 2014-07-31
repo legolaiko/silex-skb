@@ -41,7 +41,7 @@ class LoginController
         $lastError    = $lastError($request);
 
         $formLogin = $this->formFactory->create(
-            'form_auth', null, [
+            'user_form_auth', null, [
                 'username' => $lastUsername,
                 'action'   => '/user/login_check'
             ]

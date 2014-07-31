@@ -12,6 +12,7 @@ class UserDbal implements UserDbalInterface
     protected $isAccountNonExpired = true;
     protected $isAccountNonLocked  = true;
     protected $isEnabled           = true;
+    protected $isPasswordEncoded   = false;
     protected $roles               = [];
     protected $username;
     protected $nickname;
@@ -158,6 +159,4 @@ class UserDbal implements UserDbalInterface
     {
         $this->nickname = $nickname;
     }
-
-
 } 

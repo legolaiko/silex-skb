@@ -11,7 +11,7 @@ class UserAuthType extends UserAbstractType
 {
     public function getName()
     {
-        return 'form_auth';
+        return 'user_form_auth';
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

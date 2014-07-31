@@ -4,8 +4,9 @@ namespace User\UserFormType;
 
 
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 
-class UserRegisterType extends UserAbstractType
+class UserPasswordType extends UserAbstractType
 {
     /**
      * Returns the name of this type.
@@ -14,16 +15,17 @@ class UserRegisterType extends UserAbstractType
      */
     public function getName()
     {
-        return 'user_form_register';
+        return 'user_form_password';
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username', 'email',    $this->getUsernameOptions())
-            ->add('nickname', 'text',     $this->getNicknameOptions())
+            ->add('currentPassword', 'password', [
+                'constraints' => new UserPassword()
+            ])
             ->add('password', 'repeated', $this->getPasswordRepeatedOptions())
-            ->add('signUp',   'submit');
+            ->add('Save',   'submit');
     }
 
 

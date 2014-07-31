@@ -29,7 +29,7 @@ class RegisterController {
     public function handle(Request $request)
     {
         $formRegister = $this->formFactory->create(
-            'form_register',
+            'user_form_register',
             $this->userManager->createUser()
         );
 

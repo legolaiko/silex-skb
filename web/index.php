@@ -42,21 +42,26 @@ $app->register(new \User\UserServiceProvider());
 $app['translator.domains'] = array(
     'messages' => array(
         'ru' => array(
-            'Register new user' => 'Регистрация пользователя',
             'Sign up' => 'Зарегистрироваться',
+            'Sign in' => 'Войти',
+            'Sign out' => 'Выйти',
+            'Save' => 'Сохранить',
             'Email' => 'Почта',
             'Nickname' => 'Имя на сайте',
             'Password' => 'Пароль',
+            'Current password' => 'Текущий пароль',
+            'Change password' => 'Изменить пароль',
             'Repeat password' => 'Повторите пароль',
             'Remember me' => 'Запомнить меня',
-            'Sign in' => 'Войти',
+            'Profile' => 'Профиль',
+            'Edit profile' => 'Редактировать профиль',
             'Bad credentials' => 'Неверное имя пользователя или пароль'
         )
     ),
     'validators' => array(
         'ru' => array(
             'The password fields must match.' => 'Значения полей должны совпадать.',
-            'User name already registered.' => 'Это имя уже зарегестрировано'
+            'User name already registered.'   => 'Это имя уже зарегестрировано'
         )
     ),
 );

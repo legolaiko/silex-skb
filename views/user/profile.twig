@@ -1,0 +1,22 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+    <div class="row user-forms">
+        <div class="col-md-5">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="{{ url('user_profile') }}">{{ 'Profile'|trans }}</a></li>
+                <li><a href="{{ url('user_profile_edit') }}">{{ 'Edit profile'|trans }}</a></li>
+                <li><a href="{{ url('user_profile_password') }}">{{ 'Change password'|trans }}</a></li>
+            </ul>
+            <img src="{{ avatarUrl }}" class="img-thumbnail avatar" />
+            <dl>
+                <dt><span class="glyphicon glyphicon-envelope glyphicon-left"></span>{{ 'Email'|trans }}</dt>
+                <dd>{{ user.username }}</dd>
+            </dl>
+            <dl>
+                <dt><span class="glyphicon glyphicon-user glyphicon-left"></span>{{ 'Nickname'|trans }}</dt>
+                <dd>{{ user.nickname }}</dd>
+            </dl>
+        </div>
+    </div>
+{% endblock %}

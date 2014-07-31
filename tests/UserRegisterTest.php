@@ -10,7 +10,7 @@ class UserRegisterTest extends \Silex\WebTestCase
         $crawler = $client->request('GET', '/user/register');
         $this->assertGreaterThan(
             0,
-            $crawler->filter('form[name=form_register]')->count()
+            $crawler->filter('form[name=user_form_register]')->count()
         );
 
         return $crawler;
@@ -29,12 +29,12 @@ class UserRegisterTest extends \Silex\WebTestCase
     {
         $client  = $this->createClient();
         $crawler = $client->request('GET', '/user/register');
-        $form    = $crawler->selectButton('form_register_signUp')->form();
+        $form    = $crawler->selectButton('user_form_register_signUp')->form();
         $crawler = $client->submit($form, [
-            'form_register[username]'         => $username,
-            'form_register[nickname]'         => $nickname,
-            'form_register[password][first]'  => $password,
-            'form_register[password][second]' => $repeatPassword
+            'user_form_register[username]'         => $username,
+            'user_form_register[nickname]'         => $nickname,
+            'user_form_register[password][first]'  => $password,
+            'user_form_register[password][second]' => $repeatPassword
         ]);
         $this->assertGreaterThan(
             0,
@@ -62,12 +62,12 @@ class UserRegisterTest extends \Silex\WebTestCase
 
         $client  = $this->createClient();
         $crawler = $client->request('GET', '/user/register');
-        $form    = $crawler->selectButton('form_register_signUp')->form();
+        $form    = $crawler->selectButton('user_form_register_signUp')->form();
         $crawler = $client->submit($form, [
-            'form_register[username]'         => $user['username'],
-            'form_register[nickname]'         => $user['nickname'],
-            'form_register[password][first]'  => $user['password'],
-            'form_register[password][second]' => $user['password']
+            'user_form_register[username]'         => $user['username'],
+            'user_form_register[nickname]'         => $user['nickname'],
+            'user_form_register[password][first]'  => $user['password'],
+            'user_form_register[password][second]' => $user['password']
         ]);
 
         $this->assertEquals(

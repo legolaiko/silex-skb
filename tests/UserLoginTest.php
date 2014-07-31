@@ -20,10 +20,10 @@ class UserLoginTest extends \Silex\WebTestCase {
         $client  = $this->createClient();
         $client->followRedirects(true);
         $crawler = $client->request('GET', '/user/login');
-        $form    = $crawler->selectButton('form_auth_signIn')->form();
+        $form    = $crawler->selectButton('user_form_auth_signIn')->form();
         $crawler = $client->submit($form, [
-            'form_auth[username]' => 'test@test.com',
-            'form_auth[password]' => '1234'
+            'user_form_auth[username]' => 'test@test.com',
+            'user_form_auth[password]' => '1234'
         ]);
 
         $this->assertEquals(
@@ -37,11 +37,11 @@ class UserLoginTest extends \Silex\WebTestCase {
         $client  = $this->createClient();
         $client->followRedirects(true);
         $crawler = $client->request('GET', '/user/login');
-        $form    = $crawler->selectButton('form_auth_signIn')->form();
+        $form    = $crawler->selectButton('user_form_auth_signIn')->form();
         $crawler = $client->submit($form, [
-            'form_auth[username]'   => 'test@test.com',
-            'form_auth[password]'   => '1234',
-            'form_auth[rememberMe]' => true
+            'user_form_auth[username]'   => 'test@test.com',
+            'user_form_auth[password]'   => '1234',
+            'user_form_auth[rememberMe]' => true
         ]);
 
         $cookie = $client->getCookieJar()->get('REMEMBERME');
@@ -59,10 +59,10 @@ class UserLoginTest extends \Silex\WebTestCase {
         $client  = $this->createClient();
         $client->followRedirects(true);
         $crawler = $client->request('GET', '/user/login');
-        $form    = $crawler->selectButton('form_auth_signIn')->form();
+        $form    = $crawler->selectButton('user_form_auth_signIn')->form();
         $crawler = $client->submit($form, [
-            'form_auth[username]' => $username,
-            'form_auth[password]' => $password
+            'user_form_auth[username]' => $username,
+            'user_form_auth[password]' => $password
         ]);
 
         $this->assertGreaterThan(

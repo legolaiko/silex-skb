@@ -23,6 +23,14 @@ interface UserManagerInterface
     public function insertUser(UserInterface $user);
 
     /**
+     * Updates existing user in storage
+     *
+     * @param UserInterface $user
+     * @return void
+     */
+    public function updateUser(UserInterface $user);
+
+    /**
      * Extracts user from storage by username
      *
      * @param $username

@@ -6,8 +6,13 @@
     padding-right: 0.5em;
 }
 
-.user-forms form {
-    padding-top: 25px;
+.user-forms ul.nav-tabs {
+    margin-bottom: 25px;
+}
+
+.user-forms img.avatar {
+    float: left;
+    margin-right: 25px;
 }
 
 ul.form-errors {
