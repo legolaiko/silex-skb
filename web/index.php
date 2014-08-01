@@ -10,7 +10,7 @@ $app = new \Silex\Application($config);
 
 $app->register(new Silex\Provider\TwigServiceProvider(), [
     'twig.path' => [__DIR__.'/../views'],
-    // 'twig.options' => ['cache' => __DIR__.'/../cache']
+    'twig.options' => ['cache' => __DIR__.'/../cache']
 ]);
 $app->register(new \Silex\Provider\FormServiceProvider());
 $app->register(new \Silex\Provider\TranslationServiceProvider());
