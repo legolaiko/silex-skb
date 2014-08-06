@@ -35,7 +35,7 @@ $app->register(new \Silex\Provider\ServiceControllerServiceProvider());
 
 
 
-$app->register(new \User\UserServiceProvider());
+$app->register(new \SilexUserWorkflow\UserServiceProvider());
 
 
 

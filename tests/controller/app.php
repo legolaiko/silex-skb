@@ -24,7 +24,7 @@ $app->register(new \Silex\Provider\SessionServiceProvider());
 $app->register(new \Silex\Provider\SecurityServiceProvider());
 $app->register(new \Silex\Provider\RememberMeServiceProvider());
 $app->register(new \Silex\Provider\ServiceControllerServiceProvider());
-$app->register(new \User\UserServiceProvider());
+$app->register(new \SilexUserWorkflow\UserServiceProvider());
 
 // entering test mode
 $app['session.test'] = true;
