@@ -6,6 +6,15 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 interface MappedUserInterface extends AdvancedUserInterface
 {
+    // Constant field aliases
+    const FIELD_USERNAME    = 'username';
+    const FIELD_PASSWORD    = 'password';
+    const FIELD_SALT        = 'salt';
+    const FIELD_ID          = 'id';
+    const FIELD_NICKNAME    = 'nickname';
+    const FIELD_IS_ENABLED  = 'isEnabled';
+    const FIELD_ROLES       = 'roles';
+
     public function getId();
     public function setId($id);
 

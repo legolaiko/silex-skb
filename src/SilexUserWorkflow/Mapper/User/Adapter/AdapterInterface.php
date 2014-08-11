@@ -14,7 +14,7 @@ interface AdapterInterface
 
     public function deleteUser(array $criteria);
 
-    public function findUserRoles(array $criteria);
+    public function findUserRoles($userId);
 
-    public function replaceUserRoles(array $criteria, array $roles);
+    public function replaceUserRoles($userId, array $roles);
 } 

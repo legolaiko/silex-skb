@@ -133,7 +133,7 @@ class User implements MappedUserInterface
     public function getRoles()
     {
         if (is_callable($this->roles)) {
-            $this->roles = call_user_func($this->roles, [$this]);
+            $this->roles = call_user_func($this->roles, $this);
         }
         return $this->roles;
     }

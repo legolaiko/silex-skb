@@ -23,6 +23,7 @@ use SilexUserWorkflow\Form\Type\UserEditType;
 use SilexUserWorkflow\Form\Type\UserPasswordType;
 use SilexUserWorkflow\Form\Type\UserRegisterType;
 
+use SilexUserWorkflow\Mapper\User\Entity\MappedUserInterface;
 use SilexUserWorkflow\UserManager\Dbal\UserDbalManager;
 use SilexUserWorkflow\UserUniqueConstraint\UserUniqueConstraintValidator;
 use SilexUserWorkflow\ViewRenderer\TwigRenderer;
@@ -45,6 +46,19 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
         $app['user.remember_me_key']     = '1234';
         $app['user.class']               = 'SilexUserWorkflow\\UserManager\\Dbal\\UserDbal';
         $app['user.default_target_path'] = 'user_profile';
+
+        $app['user.mapper.fields'] = [
+            MappedUserInterface::FIELD_ID         => 'id',
+            MappedUserInterface::FIELD_USERNAME   => 'username',
+            MappedUserInterface::FIELD_PASSWORD   => 'password',
+            MappedUserInterface::FIELD_NICKNAME   => 'nickname',
+            MappedUserInterface::FIELD_IS_ENABLED => 'enabled'
+        ];
+
+        $app['user.mapper.defaults'] = [
+            MappedUserInterface::FIELD_SALT  => $app['user.salt'],
+            MappedUserInterface::FIELD_ROLES => ['ROLE_USER']
+        ];
 
 
         $app['user.manager'] = function() use ($app) {
