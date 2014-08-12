@@ -3,10 +3,10 @@
 
 namespace SilexUserWorkflow\Controller;
 
+use SilexUserWorkflow\Mapper\User\UserMapperInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use SilexUserWorkflow\UserManager\UserManagerInterface;
 use SilexUserWorkflow\ViewRenderer\RendererInterface;
 
 class RegisterController {
@@ -17,7 +17,7 @@ class RegisterController {
 
     public function __construct(
         FormFactoryInterface $formFactory,
-        UserManagerInterface $userManager,
+        UserMapperInterface $userManager,
         RendererInterface    $renderer
     )
     {
@@ -30,14 +30,14 @@ class RegisterController {
     {
         $formRegister = $this->formFactory->create(
             'user_form_register',
-            $this->userManager->createUser()
+            $this->userManager->create()
         );
 
         $formRegister->handleRequest($request);
 
         if ($formRegister->isValid()) {
             $user = $formRegister->getData();
-            $this->userManager->insertUser($user);
+            $this->userManager->save($user);
             /*$this->userManager->authenticateForced($user);
             $this->securityContext->setToken(new UsernamePasswordToken($user, null, $providerKey));*/
             $response = new RedirectResponse('/');

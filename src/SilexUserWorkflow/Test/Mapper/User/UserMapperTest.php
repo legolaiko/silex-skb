@@ -5,7 +5,7 @@ namespace SilexUserWorkflow\Test\Mapper\User;
 
 
 use SilexUserWorkflow\Mapper\User\Entity\MappedUserInterface;
-use SilexUserWorkflow\Mapper\User\Mapper;
+use SilexUserWorkflow\Mapper\User\UserMapper;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\Security\Core\Role\Role;
 
@@ -29,17 +29,17 @@ class UserMapperTest extends \PHPUnit_Framework_TestCase
     public function testConstructInvalidFieldMap()
     {
         $fieldMap = [ ];
-        $adapter = $this->getMock('\SilexUserWorkflow\Mapper\User\Adapter\AdapterInterface');
+        $adapter = $this->getMock('\SilexUserWorkflow\Mapper\User\Adapter\UserAdapterInterface');
 
         // throws exception
-        $mapper = new Mapper($adapter, new PropertyAccessor(false, true), $fieldMap,
+        $mapper = new UserMapper($adapter, new PropertyAccessor(false, true), $fieldMap,
             [], '\SilexUserWorkflow\Mapper\User\Entity\User');
     }
 
     public function testConstructValid()
     {
-        $adapter = $this->getMock('\SilexUserWorkflow\Mapper\User\Adapter\AdapterInterface');
-        $mapper = new Mapper($adapter, new PropertyAccessor(false, true), $this->fieldMap,
+        $adapter = $this->getMock('\SilexUserWorkflow\Mapper\User\Adapter\UserAdapterInterface');
+        $mapper = new UserMapper($adapter, new PropertyAccessor(false, true), $this->fieldMap,
             [], '\SilexUserWorkflow\Mapper\User\Entity\User');
     }
 
@@ -49,8 +49,8 @@ class UserMapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateInvalidClass()
     {
-        $adapter = $this->getMock('\SilexUserWorkflow\Mapper\User\Adapter\AdapterInterface');
-        $mapper = new Mapper($adapter, new PropertyAccessor(false, true), $this->fieldMap,
+        $adapter = $this->getMock('\SilexUserWorkflow\Mapper\User\Adapter\UserAdapterInterface');
+        $mapper = new UserMapper($adapter, new PropertyAccessor(false, true), $this->fieldMap,
             [], '\SilexUserWorkflow\Test\Mapper\User\Mock\MockInvalidUser');
 
         // throws exception
@@ -59,8 +59,8 @@ class UserMapperTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateCustomClass()
     {
-        $adapter = $this->getMock('\SilexUserWorkflow\Mapper\User\Adapter\AdapterInterface');
-        $mapper = new Mapper($adapter, new PropertyAccessor(false, true), $this->fieldMap,
+        $adapter = $this->getMock('\SilexUserWorkflow\Mapper\User\Adapter\UserAdapterInterface');
+        $mapper = new UserMapper($adapter, new PropertyAccessor(false, true), $this->fieldMap,
             ['myField' => 'test_val'], '\SilexUserWorkflow\Test\Mapper\User\Mock\MockCustomUser');
 
         $user = $mapper->create();
@@ -69,8 +69,8 @@ class UserMapperTest extends \PHPUnit_Framework_TestCase
 
     public function testFindByUsername()
     {
-        $adapter = $this->getMock('\SilexUserWorkflow\Mapper\User\Adapter\AdapterInterface');
-        $mapper = new Mapper($adapter, new PropertyAccessor(false, true), $this->fieldMap,
+        $adapter = $this->getMock('\SilexUserWorkflow\Mapper\User\Adapter\UserAdapterInterface');
+        $mapper = new UserMapper($adapter, new PropertyAccessor(false, true), $this->fieldMap,
             [], '\SilexUserWorkflow\Mapper\User\Entity\User');
 
         $adapter->expects($this->once())
@@ -87,8 +87,8 @@ class UserMapperTest extends \PHPUnit_Framework_TestCase
 
     public function testSaveUserInsert()
     {
-        $adapter = $this->getMock('\SilexUserWorkflow\Mapper\User\Adapter\AdapterInterface');
-        $mapper = new Mapper($adapter, new PropertyAccessor(false, true), $this->fieldMap,
+        $adapter = $this->getMock('\SilexUserWorkflow\Mapper\User\Adapter\UserAdapterInterface');
+        $mapper = new UserMapper($adapter, new PropertyAccessor(false, true), $this->fieldMap,
             [], '\SilexUserWorkflow\Mapper\User\Entity\User');
 
         $adapter->expects($this->once())
@@ -108,8 +108,8 @@ class UserMapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testSaveUserUpdate(MappedUserInterface $user)
     {
-        $adapter = $this->getMock('\SilexUserWorkflow\Mapper\User\Adapter\AdapterInterface');
-        $mapper = new Mapper($adapter, new PropertyAccessor(false, true), $this->fieldMap,
+        $adapter = $this->getMock('\SilexUserWorkflow\Mapper\User\Adapter\UserAdapterInterface');
+        $mapper = new UserMapper($adapter, new PropertyAccessor(false, true), $this->fieldMap,
             [], '\SilexUserWorkflow\Mapper\User\Entity\User');
 
         $adapter->expects($this->once())
@@ -125,8 +125,8 @@ class UserMapperTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadRoles()
     {
-        $adapter = $this->getMock('\SilexUserWorkflow\Mapper\User\Adapter\AdapterInterface');
-        $mapper = new Mapper($adapter, new PropertyAccessor(false, true), $this->fieldMap,
+        $adapter = $this->getMock('\SilexUserWorkflow\Mapper\User\Adapter\UserAdapterInterface');
+        $mapper = new UserMapper($adapter, new PropertyAccessor(false, true), $this->fieldMap,
             [], '\SilexUserWorkflow\Mapper\User\Entity\User');
 
         $adapter->expects($this->once())
@@ -152,8 +152,8 @@ class UserMapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testSaveRoles(MappedUserInterface $user)
     {
-        $adapter = $this->getMock('\SilexUserWorkflow\Mapper\User\Adapter\AdapterInterface');
-        $mapper = new Mapper($adapter, new PropertyAccessor(false, true), $this->fieldMap,
+        $adapter = $this->getMock('\SilexUserWorkflow\Mapper\User\Adapter\UserAdapterInterface');
+        $mapper = new UserMapper($adapter, new PropertyAccessor(false, true), $this->fieldMap,
             [], '\SilexUserWorkflow\Mapper\User\Entity\User');
 
         $user->setRoles([

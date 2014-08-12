@@ -3,11 +3,11 @@
 
 namespace SilexUserWorkflow\Controller;
 
+use SilexUserWorkflow\Mapper\User\UserMapperInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use SilexUserWorkflow\UserManager\UserManagerInterface;
 use SilexUserWorkflow\ViewRenderer\RendererInterface;
 
 class ProfilePasswordController
@@ -19,7 +19,7 @@ class ProfilePasswordController
     protected $redirectUrl;
 
     public function __construct(
-        FormFactoryInterface $formFactory, UserManagerInterface $userManager,
+        FormFactoryInterface $formFactory, UserMapperInterface $userManager,
         SecurityContextInterface $security, RendererInterface $renderer, $successRedirectUrl
     )
     {
@@ -41,7 +41,7 @@ class ProfilePasswordController
             }
             $user = $user->getUser();
             $user->setPassword($formProfile->getData()['password']);
-            $this->userManager->updateUser($user);
+            $this->userManager->save($user);
             $response = new RedirectResponse($this->redirectUrl);
         } else {
             $response = $this->renderer->render('user/profile-password', [

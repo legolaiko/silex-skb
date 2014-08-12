@@ -6,7 +6,7 @@ namespace SilexUserWorkflow\Mapper\User;
 
 use SilexUserWorkflow\Mapper\User\Entity\MappedUserInterface;
 
-interface MapperInterface
+interface UserMapperInterface
 {
     /**
      * Creates new user, factory method

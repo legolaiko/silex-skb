@@ -4,7 +4,7 @@
 namespace SilexUserWorkflow\Test\Mapper\User;
 
 
-use SilexUserWorkflow\Mapper\User\Adapter\Dbal\Adapter;
+use SilexUserWorkflow\Mapper\User\Adapter\Dbal\UserAdapter;
 
 class DbalUserAdapterTest extends \PHPUnit_Framework_TestCase
 {
@@ -14,7 +14,7 @@ class DbalUserAdapterTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $adapter = new Adapter($conn, ['usersTableName' => 'my_test_users']);
+        $adapter = new UserAdapter($conn, ['usersTableName' => 'my_test_users']);
 
         $this->assertEquals('my_test_users', $adapter->getOptions()['usersTableName']);
     }
@@ -25,7 +25,7 @@ class DbalUserAdapterTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $adapter = new Adapter($conn);
+        $adapter = new UserAdapter($conn);
 
         $conn->expects($this->once())
             ->method('insert')
@@ -49,7 +49,7 @@ class DbalUserAdapterTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $adapter = new Adapter($conn);
+        $adapter = new UserAdapter($conn);
 
         $conn->expects($this->once())
             ->method('update')
@@ -68,7 +68,7 @@ class DbalUserAdapterTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $adapter = new Adapter($conn);
+        $adapter = new UserAdapter($conn);
 
         $conn->expects($this->once())
             ->method('delete')
@@ -86,7 +86,7 @@ class DbalUserAdapterTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $adapter = new Adapter($conn);
+        $adapter = new UserAdapter($conn);
 
         $conn->expects($this->once())
             ->method('fetchArray')
@@ -107,7 +107,7 @@ class DbalUserAdapterTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $adapter = new Adapter($conn);
+        $adapter = new UserAdapter($conn);
 
         $conn->expects($this->once())
             ->method('fetchAll')
@@ -127,7 +127,7 @@ class DbalUserAdapterTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $adapter = new Adapter($conn);
+        $adapter = new UserAdapter($conn);
 
         $adapter->replaceUserRoles(42, ['TEST_ROLE_1', 'TEST_ROLE_2']);
 

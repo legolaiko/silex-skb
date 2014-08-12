@@ -3,18 +3,19 @@
 
 namespace SilexUserWorkflow;
 
+use SilexUserWorkflow\Mapper\User\UserMapperInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use SilexUserWorkflow\UserManager\UserManagerInterface;
+
 
 class UserProvider implements UserProviderInterface {
 
     protected $userMapper;
     protected $supportedClass;
 
-    public function __construct(UserManagerInterface $userMapper, $supportedClass)
+    public function __construct(UserMapperInterface $userMapper, $supportedClass)
     {
         $this->userMapper     = $userMapper;
         $this->supportedClass = $supportedClass;

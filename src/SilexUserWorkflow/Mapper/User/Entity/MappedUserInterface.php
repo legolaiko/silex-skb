@@ -26,8 +26,6 @@ interface MappedUserInterface extends AdvancedUserInterface
 
     // Setters for AdvancedUserInterface
 
-
-
     public function isAccountNonExpired($isAccountNonExpired = null);
     public function isAccountNonLocked($isAccountNonLocked = null);
     public function isCredentialsNonExpired($isCredentialsNonExpired = null);

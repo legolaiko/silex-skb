@@ -4,7 +4,7 @@
 namespace SilexUserWorkflow\Mapper\User\Adapter;
 
 
-interface AdapterInterface
+interface UserAdapterInterface
 {
     public function insertUser(array $data);
 

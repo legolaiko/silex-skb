@@ -3,28 +3,28 @@
 
 namespace SilexUserWorkflow\Controller;
 
+use SilexUserWorkflow\Mapper\User\UserMapperInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use SilexUserWorkflow\UserManager\UserManagerInterface;
 use SilexUserWorkflow\ViewRenderer\RendererInterface;
 
 class ProfileEditController
 {
     protected $formFactory;
-    protected $userManager;
+    protected $userMapper;
     protected $security;
     protected $renderer;
     protected $redirectUrl;
 
     public function __construct(
-        FormFactoryInterface $formFactory, UserManagerInterface $userManager,
+        FormFactoryInterface $formFactory, UserMapperInterface $userManager,
         SecurityContextInterface $security, RendererInterface $renderer, $successRedirectUrl
     )
     {
         $this->formFactory = $formFactory;
-        $this->userManager = $userManager;
+        $this->userMapper  = $userManager;
         $this->security    = $security;
         $this->renderer    = $renderer;
         $this->redirectUrl = $successRedirectUrl;
@@ -40,7 +40,7 @@ class ProfileEditController
         $formProfile = $this->formFactory->create('user_form_edit', $user);
         $formProfile->handleRequest($request);
         if ($formProfile->isValid()) {
-            $this->userManager->updateUser($user);
+            $this->userMapper->save($user);
             $response = new RedirectResponse($this->redirectUrl);
         } else {
             $response = $this->renderer->render('user/profile-edit', [

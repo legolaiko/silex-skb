@@ -4,12 +4,12 @@
 namespace SilexUserWorkflow\Mapper\User;
 
 
-use SilexUserWorkflow\Mapper\User\Adapter\AdapterInterface;
+use SilexUserWorkflow\Mapper\User\Adapter\UserAdapterInterface;
 use SilexUserWorkflow\Mapper\User\Entity\MappedUserInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Security\Core\Role\Role;
 
-class Mapper implements MapperInterface
+class UserMapper implements UserMapperInterface
 {
     protected $adapter;
     protected $accessor;
@@ -18,7 +18,7 @@ class Mapper implements MapperInterface
     protected $userClass;
 
 
-    public function __construct(AdapterInterface $adapter, PropertyAccessorInterface $accessor,
+    public function __construct(UserAdapterInterface $adapter, PropertyAccessorInterface $accessor,
                                 array $fieldMap, array $defaults, $userClass)
     {
         $this->adapter   = $adapter;
@@ -84,9 +84,7 @@ class Mapper implements MapperInterface
         $user = $this->adapter->findUser(
             [$usernameCol => $username]
         );
-        $user = $this->mapArrayToUser($user);
-        $this->loadUserRoles($user);
-        return $user;
+        return $this->createFromRawData($user);
     }
 
     public function findUserRoles(MappedUserInterface $user)
@@ -108,6 +106,14 @@ class Mapper implements MapperInterface
             }
             $this->accessor->setValue($user, $fieldName, $defaultValue);
         }
+    }
+
+    protected function createFromRawData($userData)
+    {
+        $user = $this->mapArrayToUser($userData);
+        $this->loadUserRoles($user);
+        $user->isPasswordEncoded(true); // password
+        return $user;
     }
 
     protected function mapUserToArray(MappedUserInterface $user)

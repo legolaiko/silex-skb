@@ -4,15 +4,15 @@
 namespace SilexUserWorkflow\UserUniqueConstraint;
 
 
+use SilexUserWorkflow\Mapper\User\UserMapperInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use SilexUserWorkflow\UserManager\UserManagerInterface;
 
 class UserUniqueConstraintValidator extends ConstraintValidator
 {
     protected $userMapper;
 
-    public function __construct(UserManagerInterface $userMapper)
+    public function __construct(UserMapperInterface $userMapper)
     {
         $this->userMapper = $userMapper;
     }

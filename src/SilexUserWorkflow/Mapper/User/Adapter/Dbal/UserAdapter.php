@@ -5,10 +5,10 @@ namespace SilexUserWorkflow\Mapper\User\Adapter\Dbal;
 
 
 use Doctrine\DBAL\Connection;
-use SilexUserWorkflow\Mapper\User\Adapter\AdapterInterface;
+use SilexUserWorkflow\Mapper\User\Adapter\UserAdapterInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Adapter implements AdapterInterface
+class UserAdapter implements UserAdapterInterface
 {
     protected $defaultOptions = [
         'usersTableName'     => 'user',

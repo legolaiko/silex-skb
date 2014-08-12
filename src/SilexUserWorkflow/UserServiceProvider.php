@@ -23,10 +23,13 @@ use SilexUserWorkflow\Form\Type\UserEditType;
 use SilexUserWorkflow\Form\Type\UserPasswordType;
 use SilexUserWorkflow\Form\Type\UserRegisterType;
 
+use SilexUserWorkflow\Mapper\User\Adapter\Dbal\UserAdapter;
 use SilexUserWorkflow\Mapper\User\Entity\MappedUserInterface;
+use SilexUserWorkflow\Mapper\User\UserMapper;
 use SilexUserWorkflow\UserManager\Dbal\UserDbalManager;
 use SilexUserWorkflow\UserUniqueConstraint\UserUniqueConstraintValidator;
 use SilexUserWorkflow\ViewRenderer\TwigRenderer;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class UserServiceProvider implements ServiceProviderInterface, ControllerProviderInterface
 {
@@ -44,7 +47,7 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
 
         $app['user.salt']                = '1234';
         $app['user.remember_me_key']     = '1234';
-        $app['user.class']               = 'SilexUserWorkflow\\UserManager\\Dbal\\UserDbal';
+        $app['user.class']               = 'SilexUserWorkflow\\Mapper\\User\\Entity\\User';
         $app['user.default_target_path'] = 'user_profile';
 
         $app['user.mapper.fields'] = [
@@ -55,20 +58,30 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
             MappedUserInterface::FIELD_IS_ENABLED => 'enabled'
         ];
 
-        $app['user.mapper.defaults'] = [
-            MappedUserInterface::FIELD_SALT  => $app['user.salt'],
-            MappedUserInterface::FIELD_ROLES => ['ROLE_USER']
-        ];
+        $app['user.mapper.defaults'] = function() use ($app) {
+            return [
+                MappedUserInterface::FIELD_SALT  => $app['user.salt'],
+                MappedUserInterface::FIELD_ROLES => ['ROLE_USER']
+            ];
+        };
 
+        $app['user.mapper.adapter.options'] = [];
 
-        $app['user.manager'] = function() use ($app) {
-            return new UserDbalManager(
-                $app['user.class'], $app['user.salt'], $app['db'], $app['security.encoder_factory']
-            );
+        $app['user.mapper.adapter'] = function() use($app) {
+            return new UserAdapter($app['db'], $app['user.mapper.adapter.options']);
+        };
+
+        $app['user.mapper.propertyAccessor'] = function() use($app) {
+            return new PropertyAccessor(false, true);
+        };
+
+        $app['user.mapper'] = function() use($app) {
+            return new UserMapper($app['user.mapper.adapter'], $app['user.mapper.propertyAccessor'],
+                $app['user.mapper.fields'], $app['user.mapper.defaults'], $app['user.class']);
         };
 
         $app['user.provider'] = function() use ($app) {
-            return new UserProvider($app['user.manager'], $app['user.class']);
+            return new UserProvider($app['user.mapper'], $app['user.class']);
         };
 
         $app['user.form.auth'] = function() {
@@ -105,7 +118,7 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
             + ['user.validator.unique' => 'user.validator.unique'];
 
         $app['user.validator.unique'] = function() use ($app) {
-            return new UserUniqueConstraintValidator($app['user.manager']);
+            return new UserUniqueConstraintValidator($app['user.mapper']);
         };
 
         $app['security.firewalls'] = function() use ($app) {
@@ -153,7 +166,7 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
         $app['user.controller.register'] = function() use($app) {
             return new RegisterController(
                 $app['form.factory'],
-                $app['user.manager'],
+                $app['user.mapper'],
                 $app['user.renderer']
             );
         };
@@ -168,7 +181,7 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
         $app['user.controller.profile.edit'] = function() use($app) {
             return new ProfileEditController(
                 $app['form.factory'],
-                $app['user.manager'],
+                $app['user.mapper'],
                 $app['security'],
                 $app['user.renderer'],
                 $app['url_generator']->generate('user_profile')
@@ -178,7 +191,7 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
         $app['user.controller.profile.password'] = function() use($app) {
             return new ProfilePasswordController(
                 $app['form.factory'],
-                $app['user.manager'],
+                $app['user.mapper'],
                 $app['security'],
                 $app['user.renderer'],
                 $app['url_generator']->generate('user_profile')
