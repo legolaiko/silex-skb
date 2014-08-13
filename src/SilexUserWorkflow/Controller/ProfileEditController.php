@@ -19,12 +19,12 @@ class ProfileEditController
     protected $redirectUrl;
 
     public function __construct(
-        FormFactoryInterface $formFactory, UserMapperInterface $userManager,
+        FormFactoryInterface $formFactory, UserMapperInterface $userMapper,
         SecurityContextInterface $security, RendererInterface $renderer, $successRedirectUrl
     )
     {
         $this->formFactory = $formFactory;
-        $this->userMapper  = $userManager;
+        $this->userMapper  = $userMapper;
         $this->security    = $security;
         $this->renderer    = $renderer;
         $this->redirectUrl = $successRedirectUrl;

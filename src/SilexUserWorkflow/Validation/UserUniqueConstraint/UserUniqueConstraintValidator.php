@@ -1,7 +1,7 @@
 <?php
 
 
-namespace SilexUserWorkflow\UserUniqueConstraint;
+namespace SilexUserWorkflow\Validation\UserUniqueConstraint;
 
 
 use SilexUserWorkflow\Mapper\User\UserMapperInterface;
@@ -22,7 +22,7 @@ class UserUniqueConstraintValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
-        /* @var $constraint \SilexUserWorkflow\UserUniqueConstraint\UserUniqueConstraint */
+        /* @var $constraint \SilexUserWorkflow\Validation\UserUniqueConstraint\UserUniqueConstraint */
 
         $user = $this->userMapper->findByUsername($value);
         if ($user) {

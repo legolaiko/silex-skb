@@ -3,9 +3,10 @@
 namespace SilexUserWorkflow\Form\Type;
 
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class UserEditType extends UserAbstractType
+class UserEditType extends AbstractType
 {
     /**
      * Returns the name of this type.
@@ -20,7 +21,7 @@ class UserEditType extends UserAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nickname', 'text', $this->getNicknameOptions())
+            ->add('nickname', 'user_form_field_nickname')
             ->add('Save', 'submit');
     }
 

@@ -13,18 +13,18 @@ use SilexUserWorkflow\ViewRenderer\RendererInterface;
 class ProfilePasswordController
 {
     protected $formFactory;
-    protected $userManager;
+    protected $userMapper;
     protected $security;
     protected $renderer;
     protected $redirectUrl;
 
     public function __construct(
-        FormFactoryInterface $formFactory, UserMapperInterface $userManager,
+        FormFactoryInterface $formFactory, UserMapperInterface $userMapper,
         SecurityContextInterface $security, RendererInterface $renderer, $successRedirectUrl
     )
     {
         $this->formFactory = $formFactory;
-        $this->userManager = $userManager;
+        $this->userMapper  = $userMapper;
         $this->security    = $security;
         $this->renderer    = $renderer;
         $this->redirectUrl = $successRedirectUrl;
@@ -32,20 +32,19 @@ class ProfilePasswordController
 
     public function handle(Request $request)
     {
-        $formProfile = $this->formFactory->create('user_form_password');
-        $formProfile->handleRequest($request);
-        if ($formProfile->isValid()) {
-            $user = $this->security->getToken();
-            if (null === $user) {
-                throw new \LogicException('Token must not be null');
-            }
-            $user = $user->getUser();
-            $user->setPassword($formProfile->getData()['password']);
-            $this->userManager->save($user);
+        $user = $this->security->getToken();
+        if (null === $user) {
+            throw new \LogicException('Token must not be null');
+        }
+        $user         = clone $user->getUser();
+        $formPassword = $this->formFactory->create('user_form_password', $user);
+        $formPassword->handleRequest($request);
+        if ($formPassword->isValid()) {
+            $this->userMapper->save($user);
             $response = new RedirectResponse($this->redirectUrl);
         } else {
             $response = $this->renderer->render('user/profile-password', [
-                'formPassword' => $formProfile->createView()
+                'formPassword' => $formPassword->createView()
             ]);
         }
         return $response;

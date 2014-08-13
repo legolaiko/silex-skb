@@ -75,8 +75,7 @@ class User implements MappedUserInterface
      */
     public function eraseCredentials()
     {
-        $this->password = null;
-        $this->salt     = null;
+
     }
 
     /**
@@ -133,6 +132,7 @@ class User implements MappedUserInterface
     public function getRoles()
     {
         if (is_callable($this->roles)) {
+            // roles lazy loader specified
             $this->roles = call_user_func($this->roles, $this);
         }
         return $this->roles;
@@ -200,4 +200,12 @@ class User implements MappedUserInterface
         }
         return $this->isRolesDirt;
     }
+
+    function __sleep()
+    {
+        $this->getRoles();
+        return array_keys(get_object_vars($this));
+    }
+
+
 } 

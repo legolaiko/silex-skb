@@ -17,7 +17,11 @@ use SilexUserWorkflow\Controller\ProfileEditController;
 use SilexUserWorkflow\Controller\ProfilePasswordController;
 use SilexUserWorkflow\Controller\RegisterController;
 
-use SilexUserWorkflow\Form\Extension\UserFormExtension;
+use SilexUserWorkflow\Form\Extension\ContainerAwareFormExtension;
+use SilexUserWorkflow\Form\Listener\PasswordEncoderListener;
+use SilexUserWorkflow\Form\Type\Field\NicknameFieldType;
+use SilexUserWorkflow\Form\Type\Field\PasswordRepeatedFieldType;
+use SilexUserWorkflow\Form\Type\Field\UsernameFieldType;
 use SilexUserWorkflow\Form\Type\UserAuthType;
 use SilexUserWorkflow\Form\Type\UserEditType;
 use SilexUserWorkflow\Form\Type\UserPasswordType;
@@ -27,7 +31,7 @@ use SilexUserWorkflow\Mapper\User\Adapter\Dbal\UserAdapter;
 use SilexUserWorkflow\Mapper\User\Entity\MappedUserInterface;
 use SilexUserWorkflow\Mapper\User\UserMapper;
 use SilexUserWorkflow\UserManager\Dbal\UserDbalManager;
-use SilexUserWorkflow\UserUniqueConstraint\UserUniqueConstraintValidator;
+use SilexUserWorkflow\Validation\UserUniqueConstraint\UserUniqueConstraintValidator;
 use SilexUserWorkflow\ViewRenderer\TwigRenderer;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
@@ -87,26 +91,40 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
         $app['user.form.auth'] = function() {
             return new UserAuthType();
         };
-
-        $app['user.form.register'] = function() {
-            return new UserRegisterType();
+        $app['user.form.register'] = function() use ($app) {
+            return new UserRegisterType($app['form.listener.passwordEncoder']);
         };
-
         $app['user.form.edit'] = function() {
             return new UserEditType();
         };
-        $app['user.form.password'] = function() {
-            return new UserPasswordType();
+        $app['user.form.password'] = function() use ($app) {
+            return new UserPasswordType($app['form.listener.passwordEncoder']);
+        };
+        $app['user.form.field.passwordRepeated'] = function() {
+            return new PasswordRepeatedFieldType();
+        };
+        $app['user.form.field.username'] = function() {
+            return new UsernameFieldType();
+        };
+        $app['user.form.field.nickname'] = function() {
+            return new NicknameFieldType();
+        };
+
+        $app['form.listener.passwordEncoder'] = function() use ($app) {
+            return new PasswordEncoderListener($app['security.encoder_factory']);
         };
 
         $app->extend('form.extensions', function($extensions, $app) {
-            // to make type accessible via its names
-            $extensions[] = new UserFormExtension([
-                $app['user.form.auth'],
-                $app['user.form.register'],
-                $app['user.form.edit'],
-                $app['user.form.password']
-            ]);
+            // to make types accessible via its names
+            $extensions[] = new ContainerAwareFormExtension([
+                'user.form.auth',
+                'user.form.register',
+                'user.form.edit',
+                'user.form.password',
+                'user.form.field.passwordRepeated',
+                'user.form.field.username',
+                'user.form.field.nickname'
+            ], $app);
             return $extensions;
         });
 
@@ -145,9 +163,9 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
             ];
         };
 
-        $app['security.access_rules'] = [
+        /*$app['security.access_rules'] = [
             ['^/user/profile', 'ROLE_USER']
-        ];
+        ];*/
 
         $app['user.renderer'] = function() use($app) {
             return new TwigRenderer($app['twig']);
@@ -197,8 +215,6 @@ class UserServiceProvider implements ServiceProviderInterface, ControllerProvide
                 $app['url_generator']->generate('user_profile')
             );
         };
-
-
 
         $app->mount('user', $this);
     }

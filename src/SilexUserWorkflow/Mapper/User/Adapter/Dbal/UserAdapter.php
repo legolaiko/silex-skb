@@ -42,7 +42,7 @@ class UserAdapter implements UserAdapterInterface
         $usersTable = $this->options['tablePrefix'] . $this->options['usersTableName'];
         $where = implode(' = ? AND ', array_keys($criteria)) . ' = ?';
 
-        return $this->conn->fetchArray(
+        return $this->conn->fetchAssoc(
             'SELECT * FROM ' . $usersTable . ' WHERE ' . $where, array_values($criteria)
         );
     }
@@ -68,6 +68,9 @@ class UserAdapter implements UserAdapterInterface
             .  "    AND ra.{$this->options['adjUserIdCol']} = ? ";
 
         $roles = $this->conn->fetchAll($sql, [$userId]);
+        array_walk($roles, function(&$item){
+            $item = $item[$this->options['roleNameCol']]; // fetching first column
+        });
 
         return $roles;
     }
@@ -80,11 +83,13 @@ class UserAdapter implements UserAdapterInterface
         $this->conn->beginTransaction();
 
         $this->conn->delete($adjTable, [$this->options['adjUserIdCol'] => $userId]);
-        $sql = "INSERT INTO $adjTable ({$this->options['adjUserIdCol']}, {$this->options['adjRoleIdCol']})"
-            .  "  SELECT ?, {$this->options['roleIdCol']} FROM $rolesTable"
-            .  "    WHERE {$this->options['roleNameCol']} IN (?)";
+        if (!empty($roles)) {
+            $sql = "INSERT INTO $adjTable ({$this->options['adjUserIdCol']}, {$this->options['adjRoleIdCol']})"
+                .  "  SELECT $userId, {$this->options['roleIdCol']} FROM $rolesTable"
+                .  "    WHERE {$this->options['roleNameCol']} IN (?)";
+            $this->conn->executeQuery($sql, [$roles], [Connection::PARAM_INT_ARRAY]);
+        }
 
-        $this->conn->executeQuery($sql, [$userId, $roles]);
         $this->conn->commit();
     }
 

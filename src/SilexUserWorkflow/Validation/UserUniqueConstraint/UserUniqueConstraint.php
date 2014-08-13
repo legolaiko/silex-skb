@@ -1,7 +1,7 @@
 <?php
 
 
-namespace SilexUserWorkflow\UserUniqueConstraint;
+namespace SilexUserWorkflow\Validation\UserUniqueConstraint;
 
 
 use Symfony\Component\Validator\Constraint;

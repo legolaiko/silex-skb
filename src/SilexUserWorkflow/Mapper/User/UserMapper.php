@@ -81,39 +81,43 @@ class UserMapper implements UserMapperInterface
     public function findByUsername($username)
     {
         $usernameCol = $this->fieldMap[MappedUserInterface::FIELD_USERNAME];
-        $user = $this->adapter->findUser(
-            [$usernameCol => $username]
-        );
-        return $this->createFromRawData($user);
+        return $this->findUser([$usernameCol => $username]);
     }
 
     public function findUserRoles(MappedUserInterface $user)
     {
         $rolesStr = $this->adapter->findUserRoles($user->getId());
-        $roles = [];
-        foreach ($rolesStr as $roleStr) {
-            $roles[] = new Role($roleStr);
+        return $this->mapRoles($rolesStr);
+    }
+
+    protected function findUser(array $criteria)
+    {
+        $user = $this->adapter->findUser($criteria);
+        if ($user) {
+            $user = $this->mapArrayToUser($user);
+            $this->loadUserRoles($user);
         }
-        return $roles;
+        return $user;
     }
 
     protected function setupUserDefaults(MappedUserInterface $user)
     {
-        // TODO handle roles
         foreach($this->defaults as $fieldName => $defaultValue) {
             if (MappedUserInterface::FIELD_ROLES === $fieldName) {
-                continue;
+                // roles have to be mapped before
+                $defaultValue = $this->mapRoles($defaultValue);
             }
             $this->accessor->setValue($user, $fieldName, $defaultValue);
         }
     }
 
-    protected function createFromRawData($userData)
+    protected function mapRoles(array $rolesStr)
     {
-        $user = $this->mapArrayToUser($userData);
-        $this->loadUserRoles($user);
-        $user->isPasswordEncoded(true); // password
-        return $user;
+        $roles = [];
+        foreach ($rolesStr as $roleStr) {
+            $roles[] = new Role($roleStr);
+        }
+        return $roles;
     }
 
     protected function mapUserToArray(MappedUserInterface $user)

@@ -12,17 +12,17 @@ use SilexUserWorkflow\ViewRenderer\RendererInterface;
 class RegisterController {
     
     protected $formFactory;
-    protected $userManager;
+    protected $userMapper;
     protected $renderer;
 
     public function __construct(
         FormFactoryInterface $formFactory,
-        UserMapperInterface $userManager,
+        UserMapperInterface $userMapper,
         RendererInterface    $renderer
     )
     {
         $this->formFactory = $formFactory;
-        $this->userManager = $userManager;
+        $this->userMapper  = $userMapper;
         $this->renderer    = $renderer;
     }
 
@@ -30,22 +30,26 @@ class RegisterController {
     {
         $formRegister = $this->formFactory->create(
             'user_form_register',
-            $this->userManager->create()
+            $this->userMapper->create()
         );
 
         $formRegister->handleRequest($request);
 
         if ($formRegister->isValid()) {
             $user = $formRegister->getData();
-            $this->userManager->save($user);
+            $this->userMapper->save($user);
             /*$this->userManager->authenticateForced($user);
             $this->securityContext->setToken(new UsernamePasswordToken($user, null, $providerKey));*/
-            $response = new RedirectResponse('/');
+            //$response = new RedirectResponse('/');
         } else {
             $response = $this->renderer->render(
                 'user/register', ['formRegister' => $formRegister->createView()]
             );
         }
+
+        $response = $this->renderer->render(
+            'user/register', ['formRegister' => $formRegister->createView()]
+        );
 
         return $response;
     }

@@ -3,10 +3,19 @@
 namespace SilexUserWorkflow\Form\Type;
 
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
 
-class UserRegisterType extends UserAbstractType
+class UserRegisterType extends AbstractType
 {
+    protected $passwordEncoderListener;
+
+    public function __construct(callable $passwordEncoderListener)
+    {
+        $this->passwordEncoderListener = $passwordEncoderListener;
+    }
+
     /**
      * Returns the name of this type.
      *
@@ -20,11 +29,12 @@ class UserRegisterType extends UserAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username', 'email',    $this->getUsernameOptions())
-            ->add('nickname', 'text',     $this->getNicknameOptions())
-            ->add('password', 'repeated', $this->getPasswordRepeatedOptions())
-            ->add('signUp',   'submit');
+            ->add('username', 'user_form_field_username')
+            ->add('nickname', 'user_form_field_nickname')
+            ->add('password', 'user_form_field_passwordRepeated')
+            ->add('signUp',   'submit')
+            ->addEventListener(FormEvents::POST_SUBMIT, $this->passwordEncoderListener);
     }
 
 
-} 
+}

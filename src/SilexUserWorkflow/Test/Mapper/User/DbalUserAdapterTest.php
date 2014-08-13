@@ -89,7 +89,7 @@ class DbalUserAdapterTest extends \PHPUnit_Framework_TestCase
         $adapter = new UserAdapter($conn);
 
         $conn->expects($this->once())
-            ->method('fetchArray')
+            ->method('fetchAssoc')
             ->with(
                 $this->equalTo('SELECT * FROM user__user WHERE test_col_1 = ? AND test_col_2 = ?'),
                 $this->equalTo(['test_val_1', 'test_val_2'])
@@ -115,7 +115,7 @@ class DbalUserAdapterTest extends \PHPUnit_Framework_TestCase
                 $this->anything(),
                 $this->equalTo([42])
             )
-            ->willReturn(['TEST_ROLE_1', 'TEST_ROLE_2']);
+            ->willReturn([['role' => 'TEST_ROLE_1'], ['role' => 'TEST_ROLE_2']]);
 
         $roles = $adapter->findUserRoles(42);
         $this->assertEquals(['TEST_ROLE_1', 'TEST_ROLE_2'], $roles);

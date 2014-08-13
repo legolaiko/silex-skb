@@ -4,10 +4,11 @@
 namespace SilexUserWorkflow\Form\Type;
 
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class UserAuthType extends UserAbstractType
+class UserAuthType extends AbstractType
 {
     public function getName()
     {

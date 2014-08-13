@@ -77,6 +77,7 @@ $app['session.storage.handler'] = function() use ($app) {
 
 
 $app->match('/', function () use ($app) {
+    $t = $app['security']->getToken();
     return $app['twig']->render('layout.twig');
 })->bind('/');
 
